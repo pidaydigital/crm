@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { getDb, toRow, toRows } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,62 +7,54 @@ export async function GET(request: NextRequest) {
     const year = searchParams.get('year');
     const month = searchParams.get('month'); // YYYY-MM
 
-    const db = getDb();
+    const db = await getDb();
     const currentMonth = new Date().toISOString().slice(0, 7);
-    if (!db) {
-      return NextResponse.json({
-        currentMonth,
-        thisMonthTotal: 0,
-        thisYearTotal: 0,
-        allTimeTotal: 0,
-        monthlyTotals: [],
-        expenses: [],
-      });
-    }
 
     // Scorecards
-    const thisMonthTotal = (db.prepare(`
-      SELECT COALESCE(SUM(amount), 0) as total FROM expenses
-      WHERE strftime('%Y-%m', date) = ?
-    `).get(currentMonth) as { total: number }).total;
+    const [cmResult, yearResult, atResult] = await Promise.all([
+      db.execute({
+        sql: `SELECT COALESCE(SUM(amount), 0) as total FROM expenses WHERE strftime('%Y-%m', date) = ?`,
+        args: [currentMonth],
+      }),
+      db.execute({
+        sql: `SELECT COALESCE(SUM(amount), 0) as total FROM expenses WHERE strftime('%Y', date) = ?`,
+        args: [new Date().getFullYear().toString()],
+      }),
+      db.execute(`SELECT COALESCE(SUM(amount), 0) as total FROM expenses`),
+    ]);
 
-    const thisYearTotal = (db.prepare(`
-      SELECT COALESCE(SUM(amount), 0) as total FROM expenses
-      WHERE strftime('%Y', date) = ?
-    `).get(new Date().getFullYear().toString()) as { total: number }).total;
-
-    const allTimeTotal = (db.prepare(`
-      SELECT COALESCE(SUM(amount), 0) as total FROM expenses
-    `).get() as { total: number }).total;
+    const thisMonthTotal = Number(toRow(cmResult)?.total ?? 0);
+    const thisYearTotal = Number(toRow(yearResult)?.total ?? 0);
+    const allTimeTotal = Number(toRow(atResult)?.total ?? 0);
 
     // Monthly totals for the selected year (or current year)
     const selectedYear = year ?? new Date().getFullYear().toString();
-    const monthlyTotals = db.prepare(`
-      SELECT strftime('%Y-%m', date) as month, COALESCE(SUM(amount), 0) as total
-      FROM expenses
-      WHERE strftime('%Y', date) = ?
-      GROUP BY month
-      ORDER BY month
-    `).all(selectedYear) as { month: string; total: number }[];
+    const monthlyResult = await db.execute({
+      sql: `
+        SELECT strftime('%Y-%m', date) as month, COALESCE(SUM(amount), 0) as total
+        FROM expenses
+        WHERE strftime('%Y', date) = ?
+        GROUP BY month
+        ORDER BY month
+      `,
+      args: [selectedYear],
+    });
+    const monthlyTotals = toRows(monthlyResult);
 
     // Expense list — optionally filtered by month
-    let expenses;
+    let expensesResult;
     if (month) {
-      expenses = db.prepare(`
-        SELECT * FROM expenses
-        WHERE strftime('%Y-%m', date) = ?
-        ORDER BY date DESC, id DESC
-      `).all(month);
+      expensesResult = await db.execute({
+        sql: `SELECT * FROM expenses WHERE strftime('%Y-%m', date) = ? ORDER BY date DESC, id DESC`,
+        args: [month],
+      });
     } else if (year) {
-      expenses = db.prepare(`
-        SELECT * FROM expenses
-        WHERE strftime('%Y', date) = ?
-        ORDER BY date DESC, id DESC
-      `).all(year);
+      expensesResult = await db.execute({
+        sql: `SELECT * FROM expenses WHERE strftime('%Y', date) = ? ORDER BY date DESC, id DESC`,
+        args: [year],
+      });
     } else {
-      expenses = db.prepare(`
-        SELECT * FROM expenses ORDER BY date DESC, id DESC
-      `).all();
+      expensesResult = await db.execute(`SELECT * FROM expenses ORDER BY date DESC, id DESC`);
     }
 
     return NextResponse.json({
@@ -71,7 +63,7 @@ export async function GET(request: NextRequest) {
       thisYearTotal,
       allTimeTotal,
       monthlyTotals,
-      expenses,
+      expenses: toRows(expensesResult),
     });
   } catch (error) {
     console.error('GET /api/expenses error:', error);
@@ -94,21 +86,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Date is required' }, { status: 400 });
     }
 
-    const db = getDb();
-    if (!db) return NextResponse.json({ error: 'Database unavailable' }, { status: 503 });
-    const result = db.prepare(`
-      INSERT INTO expenses (description, category, amount, date, notes)
-      VALUES (?, ?, ?, ?, ?)
-    `).run(
-      description.trim(),
-      category?.trim() || null,
-      amount,
-      date,
-      notes?.trim() || null
-    );
+    const db = await getDb();
+    const insertResult = await db.execute({
+      sql: `INSERT INTO expenses (description, category, amount, date, notes) VALUES (?, ?, ?, ?, ?)`,
+      args: [description.trim(), category?.trim() || null, amount, date, notes?.trim() || null],
+    });
 
-    const expense = db.prepare('SELECT * FROM expenses WHERE id = ?').get(result.lastInsertRowid);
-    return NextResponse.json(expense, { status: 201 });
+    const selectResult = await db.execute({
+      sql: 'SELECT * FROM expenses WHERE id = ?',
+      args: [Number(insertResult.lastInsertRowid)],
+    });
+    return NextResponse.json(toRow(selectResult), { status: 201 });
   } catch (error) {
     console.error('POST /api/expenses error:', error);
     return NextResponse.json({ error: 'Failed to create expense' }, { status: 500 });

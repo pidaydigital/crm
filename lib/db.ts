@@ -1,31 +1,17 @@
-import type BetterSqlite3 from 'better-sqlite3';
-import path from 'path';
+import { createClient, type Client as LibsqlClient, type ResultSet } from '@libsql/client';
 
-const DB_PATH = path.join(process.cwd(), 'crm.db');
+let client: LibsqlClient | null = null;
+let schemaReady: Promise<void> | null = null;
 
-let db: BetterSqlite3.Database | null = null;
-let dbInitAttempted = false;
-
-export function getDb(): BetterSqlite3.Database | null {
-  if (dbInitAttempted) return db;
-  dbInitAttempted = true;
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
-    const Database = require('better-sqlite3') as any;
-    const instance: BetterSqlite3.Database = new Database(DB_PATH);
-    instance.pragma('journal_mode = WAL');
-    instance.pragma('foreign_keys = ON');
-    initializeSchema(instance);
-    db = instance;
-  } catch (e) {
-    console.warn('SQLite unavailable (running without database):', e);
-    db = null;
-  }
-  return db;
+function createDbClient(): LibsqlClient {
+  return createClient({
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN,
+  });
 }
 
-function initializeSchema(db: BetterSqlite3.Database): void {
-  db.exec(`
+async function initializeSchema(db: LibsqlClient): Promise<void> {
+  await db.executeMultiple(`
     CREATE TABLE IF NOT EXISTS clients (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -69,10 +55,38 @@ function initializeSchema(db: BetterSqlite3.Database): void {
   `);
 
   // Migration: add archived column if it doesn't exist
-  const columns = db.prepare("PRAGMA table_info(clients)").all() as Array<{ name: string }>;
-  if (!columns.some(col => col.name === 'archived')) {
-    db.exec("ALTER TABLE clients ADD COLUMN archived INTEGER NOT NULL DEFAULT 0");
+  const result = await db.execute('PRAGMA table_info(clients)');
+  const hasArchived = result.rows.some(row => row[1] === 'archived');
+  if (!hasArchived) {
+    await db.execute('ALTER TABLE clients ADD COLUMN archived INTEGER NOT NULL DEFAULT 0');
   }
+}
+
+export async function getDb(): Promise<LibsqlClient> {
+  if (!client) {
+    client = createDbClient();
+    schemaReady = initializeSchema(client);
+  }
+  await schemaReady;
+  return client;
+}
+
+// Convert a ResultSet row to a plain object (handles bigint → number for JSON serialization)
+function normalizeValue(val: unknown): unknown {
+  return typeof val === 'bigint' ? Number(val) : val;
+}
+
+export function toRow(result: ResultSet): Record<string, unknown> | null {
+  if (!result.rows[0]) return null;
+  return Object.fromEntries(
+    result.columns.map((col, i) => [col, normalizeValue(result.rows[0][i])])
+  );
+}
+
+export function toRows(result: ResultSet): Record<string, unknown>[] {
+  return result.rows.map(row =>
+    Object.fromEntries(result.columns.map((col, i) => [col, normalizeValue(row[i])]))
+  );
 }
 
 export interface Client {

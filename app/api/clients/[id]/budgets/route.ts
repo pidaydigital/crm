@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { getDb, toRow, toRows } from '@/lib/db';
 
 export async function GET(
   _request: NextRequest,
@@ -7,12 +7,12 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const db = getDb();
-    if (!db) return NextResponse.json([]);
-    const budgets = db.prepare(
-      'SELECT * FROM budget_entries WHERE client_id = ? ORDER BY month DESC, service ASC'
-    ).all(id);
-    return NextResponse.json(budgets);
+    const db = await getDb();
+    const result = await db.execute({
+      sql: 'SELECT * FROM budget_entries WHERE client_id = ? ORDER BY month DESC, service ASC',
+      args: [id],
+    });
+    return NextResponse.json(toRows(result));
   } catch (error) {
     console.error('GET /api/clients/[id]/budgets error:', error);
     return NextResponse.json({ error: 'Failed to fetch budgets' }, { status: 500 });
@@ -38,26 +38,22 @@ export async function POST(
       return NextResponse.json({ error: 'Amount must be a number' }, { status: 400 });
     }
 
-    const db = getDb();
-    if (!db) return NextResponse.json({ error: 'Database unavailable' }, { status: 503 });
-    const client = db.prepare('SELECT id FROM clients WHERE id = ?').get(id);
+    const db = await getDb();
+    const client = toRow(await db.execute({ sql: 'SELECT id FROM clients WHERE id = ?', args: [id] }));
     if (!client) {
       return NextResponse.json({ error: 'Client not found' }, { status: 404 });
     }
 
-    const result = db.prepare(`
-      INSERT INTO budget_entries (client_id, service, month, amount, notes)
-      VALUES (?, ?, ?, ?, ?)
-    `).run(
-      id,
-      service.trim(),
-      month,
-      Number(amount),
-      notes || null
-    );
+    const insertResult = await db.execute({
+      sql: `INSERT INTO budget_entries (client_id, service, month, amount, notes) VALUES (?, ?, ?, ?, ?)`,
+      args: [id, service.trim(), month, Number(amount), notes || null],
+    });
 
-    const entry = db.prepare('SELECT * FROM budget_entries WHERE id = ?').get(result.lastInsertRowid);
-    return NextResponse.json(entry, { status: 201 });
+    const selectResult = await db.execute({
+      sql: 'SELECT * FROM budget_entries WHERE id = ?',
+      args: [Number(insertResult.lastInsertRowid)],
+    });
+    return NextResponse.json(toRow(selectResult), { status: 201 });
   } catch (error) {
     console.error('POST /api/clients/[id]/budgets error:', error);
     return NextResponse.json({ error: 'Failed to create budget entry' }, { status: 500 });

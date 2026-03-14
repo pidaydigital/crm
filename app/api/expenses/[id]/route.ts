@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { getDb, toRow } from '@/lib/db';
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -17,27 +17,19 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Date is required' }, { status: 400 });
     }
 
-    const db = getDb();
-    if (!db) return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
-    const existing = db.prepare('SELECT id FROM expenses WHERE id = ?').get(Number(id));
+    const db = await getDb();
+    const existing = toRow(await db.execute({ sql: 'SELECT id FROM expenses WHERE id = ?', args: [Number(id)] }));
     if (!existing) {
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
     }
 
-    db.prepare(`
-      UPDATE expenses SET description = ?, category = ?, amount = ?, date = ?, notes = ?
-      WHERE id = ?
-    `).run(
-      description.trim(),
-      category?.trim() || null,
-      amount,
-      date,
-      notes?.trim() || null,
-      Number(id)
-    );
+    await db.execute({
+      sql: `UPDATE expenses SET description = ?, category = ?, amount = ?, date = ?, notes = ? WHERE id = ?`,
+      args: [description.trim(), category?.trim() || null, amount, date, notes?.trim() || null, Number(id)],
+    });
 
-    const expense = db.prepare('SELECT * FROM expenses WHERE id = ?').get(Number(id));
-    return NextResponse.json(expense);
+    const result = await db.execute({ sql: 'SELECT * FROM expenses WHERE id = ?', args: [Number(id)] });
+    return NextResponse.json(toRow(result));
   } catch (error) {
     console.error('PUT /api/expenses/[id] error:', error);
     return NextResponse.json({ error: 'Failed to update expense' }, { status: 500 });
@@ -47,13 +39,12 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const db = getDb();
-    if (!db) return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
-    const existing = db.prepare('SELECT id FROM expenses WHERE id = ?').get(Number(id));
+    const db = await getDb();
+    const existing = toRow(await db.execute({ sql: 'SELECT id FROM expenses WHERE id = ?', args: [Number(id)] }));
     if (!existing) {
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
     }
-    db.prepare('DELETE FROM expenses WHERE id = ?').run(Number(id));
+    await db.execute({ sql: 'DELETE FROM expenses WHERE id = ?', args: [Number(id)] });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('DELETE /api/expenses/[id] error:', error);
