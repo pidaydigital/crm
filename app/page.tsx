@@ -9,27 +9,23 @@ interface DashboardData {
   totalClients: number;
   currentMonthBudget: number;
   currentMonth: string;
-  recentClients: Array<{
-    id: number;
-    name: string;
-    industry: string | null;
-    status: string;
-    created_at: string;
-  }>;
-  recentContacts: Array<{
-    id: number;
-    name: string;
-    email: string | null;
-    role: string | null;
-    client_name: string;
-    client_id: number;
-    created_at: string;
-  }>;
   topClientsBudget: Array<{
     id: number;
     name: string;
     status: string;
     total_budget: number;
+  }>;
+  topExpenses: Array<{
+    id: number;
+    description: string;
+    category: string | null;
+    amount: number;
+    date: string;
+  }>;
+  monthlyChart: Array<{
+    month: string;
+    revenue: number;
+    expenses: number;
   }>;
 }
 
@@ -144,80 +140,80 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Recent clients */}
+        {/* Top Expenses This Month */}
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h3 className="font-semibold text-slate-700">Recent Clients</h3>
-            <Link href="/clients/new" className="text-xs text-blue-600 hover:underline font-medium">+ Add Client</Link>
+            <h3 className="font-semibold text-slate-700">Top Expenses</h3>
+            <span className="text-xs text-slate-400">{formatMonth(data.currentMonth)}</span>
           </div>
-          {data.recentClients.length === 0 ? (
-            <div className="px-6 py-8 text-center text-slate-400 text-sm">
-              No clients yet.{' '}
-              <Link href="/clients/new" className="text-blue-600 hover:underline">Add your first client</Link>
-            </div>
+          {data.topExpenses.length === 0 ? (
+            <div className="px-6 py-8 text-center text-slate-400 text-sm">No expenses this month</div>
           ) : (
             <ul className="divide-y divide-slate-100">
-              {data.recentClients.map((client) => (
-                <li key={client.id} className="px-6 py-3 flex items-center justify-between hover:bg-slate-50">
+              {data.topExpenses.map((expense) => (
+                <li key={expense.id} className="px-6 py-3 flex items-center justify-between hover:bg-slate-50">
                   <div>
-                    <Link href={`/clients/${client.id}`} className="text-sm font-medium text-slate-800 hover:text-blue-600">
-                      {client.name}
-                    </Link>
-                    {client.industry && (
-                      <p className="text-xs text-slate-400">{client.industry}</p>
+                    <span className="text-sm font-medium text-slate-800">{expense.description}</span>
+                    {expense.category && (
+                      <p className="text-xs text-slate-400">{expense.category}</p>
                     )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <StatusBadge status={client.status} />
-                    <span className="text-xs text-slate-400">{formatDate(client.created_at)}</span>
-                  </div>
+                  <span className="text-sm font-semibold text-red-600">{formatCurrency(expense.amount)}</span>
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        {/* Recent contacts */}
+        {/* Revenue & Expenses by Month */}
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm xl:col-span-2">
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h3 className="font-semibold text-slate-700">Recent Contacts</h3>
-            <Link href="/contacts" className="text-xs text-blue-600 hover:underline font-medium">View all</Link>
-          </div>
-          {data.recentContacts.length === 0 ? (
-            <div className="px-6 py-8 text-center text-slate-400 text-sm">No contacts yet.</div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-100">
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Role</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Added</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {data.recentContacts.map((contact) => (
-                    <tr key={contact.id} className="hover:bg-slate-50">
-                      <td className="px-4 sm:px-6 py-3">
-                        <span className="font-medium text-slate-800">{contact.name}</span>
-                        <div className="sm:hidden text-xs text-slate-400 mt-0.5">{contact.email || ''}</div>
-                      </td>
-                      <td className="px-6 py-3 text-slate-500 hidden sm:table-cell">{contact.email || '—'}</td>
-                      <td className="px-6 py-3 text-slate-500 hidden md:table-cell">{contact.role || '—'}</td>
-                      <td className="px-4 sm:px-6 py-3">
-                        <Link href={`/clients/${contact.client_id}`} className="text-blue-600 hover:underline">
-                          {contact.client_name}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-3 text-slate-400 hidden md:table-cell">{formatDate(contact.created_at)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <h3 className="font-semibold text-slate-700">Revenue &amp; Expenses by Month</h3>
+            <div className="flex items-center gap-4 text-xs text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-700 inline-block" /> Revenue
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-400 inline-block" /> Expenses
+              </span>
             </div>
-          )}
+          </div>
+          {(() => {
+            const maxVal = Math.max(...data.monthlyChart.map(m => Math.max(m.revenue, m.expenses)), 1);
+            return (
+              <div className="px-6 py-6">
+                <div className="flex items-end gap-3 sm:gap-5" style={{ height: '200px' }}>
+                  {data.monthlyChart.map((m) => {
+                    const revHeight = (m.revenue / maxVal) * 100;
+                    const expHeight = (m.expenses / maxVal) * 100;
+                    const [year, mon] = m.month.split('-');
+                    const label = new Date(Number(year), Number(mon) - 1, 1).toLocaleString('en-US', { month: 'short' });
+                    return (
+                      <div key={m.month} className="flex-1 flex flex-col items-center gap-1 h-full">
+                        <div className="flex-1 flex items-end gap-1 w-full">
+                          <div className="flex-1 flex flex-col justify-end h-full">
+                            <div
+                              className="bg-slate-700 rounded-t w-full transition-all"
+                              style={{ height: `${revHeight}%`, minHeight: m.revenue > 0 ? '4px' : '0' }}
+                              title={`Revenue: ${formatCurrency(m.revenue)}`}
+                            />
+                          </div>
+                          <div className="flex-1 flex flex-col justify-end h-full">
+                            <div
+                              className="bg-red-400 rounded-t w-full transition-all"
+                              style={{ height: `${expHeight}%`, minHeight: m.expenses > 0 ? '4px' : '0' }}
+                              title={`Expenses: ${formatCurrency(m.expenses)}`}
+                            />
+                          </div>
+                        </div>
+                        <span className="text-xs text-slate-400 mt-1">{label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>

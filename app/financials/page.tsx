@@ -65,21 +65,15 @@ export default function FinancialsPage() {
           <h2 className="text-2xl font-bold text-slate-800">Financials</h2>
           <p className="text-slate-500 text-sm mt-1">Profit &amp; loss overview across client investments and expenses</p>
         </div>
-        <div className="flex items-center gap-1">
+        <select
+          value={timeframe}
+          onChange={(e) => setTimeframe(e.target.value)}
+          className="px-3 py-2 text-sm font-medium rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300 cursor-pointer"
+        >
           {TIMEFRAMES.map(tf => (
-            <button
-              key={tf.value}
-              onClick={() => setTimeframe(tf.value)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-                timeframe === tf.value
-                  ? 'bg-slate-800 text-white'
-                  : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
-              }`}
-            >
-              {tf.label}
-            </button>
+            <option key={tf.value} value={tf.value}>{tf.label}</option>
           ))}
-        </div>
+        </select>
       </div>
 
       {loading ? (
