@@ -83,6 +83,11 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Items to show in the mobile "More" menu instead of the tab bar
+  const moreMenuLabels = ['Contacts', 'Users'];
+  const mobileTabItems = navItems.filter((item) => !moreMenuLabels.includes(item.label));
+  const mobileMoreItems = navItems.filter((item) => moreMenuLabels.includes(item.label));
+
   // Hide sidebar on auth pages
   if (pathname === '/login' || pathname === '/setup') return null;
 
@@ -160,7 +165,7 @@ export default function Sidebar() {
       {/* Mobile bottom tab bar */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-700 safe-area-pb">
         <div className="flex">
-          {navItems.map((item) => (
+          {mobileTabItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -194,7 +199,22 @@ export default function Sidebar() {
         {mobileMenuOpen && (
           <>
             <div className="fixed inset-0 z-40" onClick={() => setMobileMenuOpen(false)} />
-            <div className="absolute bottom-full left-0 right-0 z-50 bg-slate-800 border-t border-slate-700 p-3">
+            <div className="absolute bottom-full left-0 right-0 z-50 bg-slate-800 border-t border-slate-700 p-3 space-y-1">
+              {mobileMoreItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    isActive(item.href)
+                      ? 'bg-slate-700 text-white'
+                      : 'text-slate-300 hover:bg-slate-700 hover:text-white'
+                  }`}
+                >
+                  {item.icon}
+                  {item.label}
+                </Link>
+              ))}
               <button
                 onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
                 className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
