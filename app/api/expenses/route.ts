@@ -9,6 +9,16 @@ export async function GET(request: NextRequest) {
 
     const db = getDb();
     const currentMonth = new Date().toISOString().slice(0, 7);
+    if (!db) {
+      return NextResponse.json({
+        currentMonth,
+        thisMonthTotal: 0,
+        thisYearTotal: 0,
+        allTimeTotal: 0,
+        monthlyTotals: [],
+        expenses: [],
+      });
+    }
 
     // Scorecards
     const thisMonthTotal = (db.prepare(`
@@ -85,6 +95,7 @@ export async function POST(request: NextRequest) {
     }
 
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Database unavailable' }, { status: 503 });
     const result = db.prepare(`
       INSERT INTO expenses (description, category, amount, date, notes)
       VALUES (?, ?, ?, ?, ?)

@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const archived = searchParams.get('archived') === 'true' ? 1 : 0;
     const db = getDb();
+    if (!db) return NextResponse.json([]);
     const clients = db.prepare(`
       SELECT
         c.*,
@@ -37,6 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Database unavailable' }, { status: 503 });
     const result = db.prepare(`
       INSERT INTO clients (name, industry, status, website, notes)
       VALUES (?, ?, ?, ?, ?)

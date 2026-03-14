@@ -1,21 +1,30 @@
-import Database from 'better-sqlite3';
+import type BetterSqlite3 from 'better-sqlite3';
 import path from 'path';
 
 const DB_PATH = path.join(process.cwd(), 'crm.db');
 
-let db: Database.Database | null = null;
+let db: BetterSqlite3.Database | null = null;
+let dbInitAttempted = false;
 
-export function getDb(): Database.Database {
-  if (!db) {
-    db = new Database(DB_PATH);
-    db.pragma('journal_mode = WAL');
-    db.pragma('foreign_keys = ON');
-    initializeSchema(db);
+export function getDb(): BetterSqlite3.Database | null {
+  if (dbInitAttempted) return db;
+  dbInitAttempted = true;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
+    const Database = require('better-sqlite3') as any;
+    const instance: BetterSqlite3.Database = new Database(DB_PATH);
+    instance.pragma('journal_mode = WAL');
+    instance.pragma('foreign_keys = ON');
+    initializeSchema(instance);
+    db = instance;
+  } catch (e) {
+    console.warn('SQLite unavailable (running without database):', e);
+    db = null;
   }
   return db;
 }
 
-function initializeSchema(db: Database.Database): void {
+function initializeSchema(db: BetterSqlite3.Database): void {
   db.exec(`
     CREATE TABLE IF NOT EXISTS clients (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

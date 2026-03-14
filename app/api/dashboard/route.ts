@@ -4,8 +4,21 @@ import { getDb } from '@/lib/db';
 export async function GET() {
   try {
     const db = getDb();
-
     const currentMonth = new Date().toISOString().slice(0, 7);
+
+    if (!db) {
+      return NextResponse.json({
+        activeClients: 0,
+        prospectClients: 0,
+        totalClients: 0,
+        currentMonthBudget: 0,
+        currentMonth,
+        recentClients: [],
+        recentContacts: [],
+        topClientsBudget: [],
+      });
+    }
+
 
     const activeClients = db.prepare(
       "SELECT COUNT(*) as count FROM clients WHERE status = 'active' AND archived = 0"

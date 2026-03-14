@@ -18,6 +18,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
     const existing = db.prepare('SELECT id FROM expenses WHERE id = ?').get(Number(id));
     if (!existing) {
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
@@ -47,6 +48,7 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
   try {
     const { id } = await params;
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
     const existing = db.prepare('SELECT id FROM expenses WHERE id = ?').get(Number(id));
     if (!existing) {
       return NextResponse.json({ error: 'Expense not found' }, { status: 404 });

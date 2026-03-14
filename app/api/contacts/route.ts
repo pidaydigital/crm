@@ -4,6 +4,7 @@ import { getDb } from '@/lib/db';
 export async function GET() {
   try {
     const db = getDb();
+    if (!db) return NextResponse.json([]);
     const contacts = db.prepare(`
       SELECT co.*, c.name as client_name, c.status as client_status
       FROM contacts co

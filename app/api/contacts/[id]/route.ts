@@ -15,6 +15,7 @@ export async function PUT(
     }
 
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Contact not found' }, { status: 404 });
     const existing = db.prepare('SELECT id FROM contacts WHERE id = ?').get(id);
     if (!existing) {
       return NextResponse.json({ error: 'Contact not found' }, { status: 404 });
@@ -48,6 +49,7 @@ export async function DELETE(
   try {
     const { id } = await params;
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Contact not found' }, { status: 404 });
     const existing = db.prepare('SELECT id FROM contacts WHERE id = ?').get(id);
     if (!existing) {
       return NextResponse.json({ error: 'Contact not found' }, { status: 404 });

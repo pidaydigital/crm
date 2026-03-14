@@ -8,6 +8,7 @@ export async function GET(
   try {
     const { id } = await params;
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Client not found' }, { status: 404 });
     const client = db.prepare('SELECT * FROM clients WHERE id = ?').get(id);
 
     if (!client) {
@@ -50,6 +51,7 @@ export async function PUT(
     }
 
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Client not found' }, { status: 404 });
     const existing = db.prepare('SELECT id FROM clients WHERE id = ?').get(id);
     if (!existing) {
       return NextResponse.json({ error: 'Client not found' }, { status: 404 });
@@ -90,6 +92,7 @@ export async function PATCH(
     }
 
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Client not found' }, { status: 404 });
     const existing = db.prepare('SELECT id FROM clients WHERE id = ?').get(id);
     if (!existing) {
       return NextResponse.json({ error: 'Client not found' }, { status: 404 });
@@ -111,6 +114,7 @@ export async function DELETE(
   try {
     const { id } = await params;
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Client not found' }, { status: 404 });
     const existing = db.prepare('SELECT id FROM clients WHERE id = ?').get(id);
     if (!existing) {
       return NextResponse.json({ error: 'Client not found' }, { status: 404 });

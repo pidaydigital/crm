@@ -8,6 +8,20 @@ export async function GET(request: Request) {
     const currentMonth = new Date().toISOString().slice(0, 7);
 
     const db = getDb();
+    if (!db) {
+      return NextResponse.json({
+        year: Number(year),
+        currentMonth,
+        allTime: 0,
+        projectedAllTime: 0,
+        thisYear: 0,
+        projectedYear: 0,
+        thisMonth: 0,
+        clientBreakdown: [],
+        monthlyTotals: [],
+        clientMonthly: [],
+      });
+    }
 
     // Actuals: only months up to and including the current month, excluding archived clients
     const allTime = (db.prepare(`

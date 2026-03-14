@@ -8,6 +8,7 @@ export async function GET(
   try {
     const { id } = await params;
     const db = getDb();
+    if (!db) return NextResponse.json([]);
     const budgets = db.prepare(
       'SELECT * FROM budget_entries WHERE client_id = ? ORDER BY month DESC, service ASC'
     ).all(id);
@@ -38,6 +39,7 @@ export async function POST(
     }
 
     const db = getDb();
+    if (!db) return NextResponse.json({ error: 'Database unavailable' }, { status: 503 });
     const client = db.prepare('SELECT id FROM clients WHERE id = ?').get(id);
     if (!client) {
       return NextResponse.json({ error: 'Client not found' }, { status: 404 });
