@@ -8,7 +8,7 @@ export async function GET() {
       SELECT co.*, c.name as client_name, c.status as client_status
       FROM contacts co
       JOIN clients c ON c.id = co.client_id
-      WHERE c.archived = 0
+      WHERE c.archived = 0 AND c.status != 'inactive'
       ORDER BY co.name ASC
     `);
     return NextResponse.json(toRows(result));

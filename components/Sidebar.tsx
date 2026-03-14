@@ -90,7 +90,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className={`hidden lg:flex ${collapsed ? 'w-16' : 'w-64'} min-h-screen bg-slate-900 text-white flex-col flex-shrink-0 transition-all duration-200`}>
+      <aside className={`hidden lg:flex ${collapsed ? 'w-16' : 'w-64'} h-screen bg-slate-900 text-white flex-col flex-shrink-0 transition-all duration-200 sticky top-0`}>
         <div className={`${collapsed ? 'px-3' : 'px-6'} py-5 border-b border-slate-700 flex items-center justify-between`}>
           {!collapsed && (
             <div>
@@ -113,7 +113,7 @@ export default function Sidebar() {
           </button>
         </div>
 
-        <nav className="flex-1 px-2 py-4 space-y-1">
+        <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
           {navItems.map((item) => (
             <Link
               key={item.href}

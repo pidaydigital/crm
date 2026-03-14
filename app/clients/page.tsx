@@ -104,6 +104,15 @@ export default function ClientsPage() {
         </div>
         <div className="flex items-center gap-3">
           <Link
+            href="/clients/inactive"
+            className="inline-flex items-center gap-2 border border-slate-300 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+            </svg>
+            Inactive
+          </Link>
+          <Link
             href="/clients/archived"
             className="inline-flex items-center gap-2 border border-slate-300 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
           >
@@ -141,7 +150,6 @@ export default function ClientsPage() {
           <option value="all">All Statuses</option>
           <option value="active">Active</option>
           <option value="prospect">Prospect</option>
-          <option value="inactive">Inactive</option>
         </select>
       </div>
 

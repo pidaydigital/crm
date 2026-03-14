@@ -390,6 +390,8 @@ function BudgetSection({ clientId }: { clientId: number }) {
   const [editingCell, setEditingCell] = useState<{ service: string; month: string } | null>(null);
   const [editValue, setEditValue] = useState('');
   const [cellSaving, setCellSaving] = useState(false);
+  const [renamingService, setRenamingService] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
 
   useEffect(() => {
     fetch(`/api/clients/${clientId}/budgets`)
@@ -474,6 +476,38 @@ function BudgetSection({ clientId }: { clientId: number }) {
     setPendingServices(prev => prev.filter(s => s !== service));
   }
 
+  function startRenameService(service: string) {
+    setRenamingService(service);
+    setRenameValue(service);
+  }
+
+  async function commitRenameService(oldName: string) {
+    const trimmed = renameValue.trim();
+    if (!trimmed || trimmed === oldName) {
+      setRenamingService(null);
+      return;
+    }
+    if (allServices.includes(trimmed)) {
+      alert(`A service named "${trimmed}" already exists.`);
+      return;
+    }
+    try {
+      const res = await fetch(`/api/clients/${clientId}/budgets/rename`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oldName, newName: trimmed }),
+      });
+      if (res.ok) {
+        setEntries(prev => prev.map(e => e.service === oldName ? { ...e, service: trimmed } : e));
+        setPendingServices(prev => prev.map(s => s === oldName ? trimmed : s));
+      } else {
+        alert('Failed to rename service');
+      }
+    } finally {
+      setRenamingService(null);
+    }
+  }
+
   function getMonthTotal(month: string) {
     return entries
       .filter(e => e.month === `${year}-${month}`)
@@ -550,7 +584,28 @@ function BudgetSection({ clientId }: { clientId: number }) {
                 return (
                   <tr key={service} className="group border-b border-slate-100 hover:bg-slate-50/40">
                     <td className="px-4 py-2 bg-white group-hover:bg-slate-50/40 border-r border-slate-100 font-medium text-slate-700 sticky left-0 z-10 whitespace-nowrap">
-                      {service}
+                      {renamingService === service ? (
+                        <input
+                          type="text"
+                          value={renameValue}
+                          onChange={e => setRenameValue(e.target.value)}
+                          onBlur={() => commitRenameService(service)}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter') commitRenameService(service);
+                            if (e.key === 'Escape') setRenamingService(null);
+                          }}
+                          autoFocus
+                          className="border border-blue-400 rounded px-1.5 py-0.5 text-xs w-28 focus:outline-none focus:ring-1 focus:ring-blue-500 bg-blue-50"
+                        />
+                      ) : (
+                        <button
+                          onClick={() => startRenameService(service)}
+                          className="hover:text-blue-600 hover:underline text-left"
+                          title="Click to rename"
+                        >
+                          {service}
+                        </button>
+                      )}
                     </td>
                     {ALL_MONTHS.map(month => {
                       const entry = getEntry(service, month);

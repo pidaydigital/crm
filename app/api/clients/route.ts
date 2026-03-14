@@ -5,7 +5,18 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const archived = searchParams.get('archived') === 'true' ? 1 : 0;
+    const inactive = searchParams.get('inactive') === 'true';
     const db = await getDb();
+
+    let statusFilter: string;
+    if (inactive) {
+      statusFilter = "AND c.status = 'inactive'";
+    } else if (archived === 0) {
+      statusFilter = "AND c.status != 'inactive'";
+    } else {
+      statusFilter = '';
+    }
+
     const result = await db.execute({
       sql: `
         SELECT
@@ -17,7 +28,7 @@ export async function GET(request: NextRequest) {
           ), 0) as current_month_budget
         FROM clients c
         LEFT JOIN contacts co ON co.client_id = c.id
-        WHERE c.archived = ?
+        WHERE c.archived = ? ${statusFilter}
         GROUP BY c.id
         ORDER BY c.name ASC
       `,
