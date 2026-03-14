@@ -18,7 +18,7 @@ export async function GET(
     const currentMonth = new Date().toISOString().slice(0, 7);
     const currentYear = currentMonth.slice(0, 4);
 
-    const [cmResult, ytdResult, atResult] = await Promise.all([
+    const [cmResult, ytdResult, atResult, projYearResult] = await Promise.all([
       db.execute({
         sql: 'SELECT COALESCE(SUM(amount), 0) as current_month_investment FROM budget_entries WHERE client_id = ? AND month = ?',
         args: [id, currentMonth],
@@ -31,13 +31,18 @@ export async function GET(
         sql: 'SELECT COALESCE(SUM(amount), 0) as all_time_investment FROM budget_entries WHERE client_id = ? AND month <= ?',
         args: [id, currentMonth],
       }),
+      db.execute({
+        sql: 'SELECT COALESCE(SUM(amount), 0) as projected_year_investment FROM budget_entries WHERE client_id = ? AND month LIKE ?',
+        args: [id, `${currentYear}-%`],
+      }),
     ]);
 
     const current_month_investment = Number(toRow(cmResult)?.current_month_investment ?? 0);
     const ytd_investment = Number(toRow(ytdResult)?.ytd_investment ?? 0);
     const all_time_investment = Number(toRow(atResult)?.all_time_investment ?? 0);
+    const projected_year_investment = Number(toRow(projYearResult)?.projected_year_investment ?? 0);
 
-    return NextResponse.json({ ...client, current_month_investment, ytd_investment, all_time_investment });
+    return NextResponse.json({ ...client, current_month_investment, ytd_investment, all_time_investment, projected_year_investment });
   } catch (error) {
     console.error('GET /api/clients/[id] error:', error);
     return NextResponse.json({ error: 'Failed to fetch client' }, { status: 500 });

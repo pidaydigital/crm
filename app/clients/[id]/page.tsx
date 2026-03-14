@@ -657,18 +657,19 @@ function BudgetSection({ clientId }: { clientId: number }) {
 }
 
 // ---- investment scorecards ----
-function InvestmentScorecards({ client }: { client: Client & { current_month_investment: number; ytd_investment: number; all_time_investment: number } }) {
+function InvestmentScorecards({ client }: { client: Client & { current_month_investment: number; ytd_investment: number; all_time_investment: number; projected_year_investment: number } }) {
   const currentMonth = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
   const currentYear = new Date().getFullYear();
 
   const cards = [
     { label: 'Current Month Investment', sub: currentMonth, value: client.current_month_investment },
     { label: 'YTD Investment', sub: `Jan – ${currentMonth}`, value: client.ytd_investment },
+    { label: `${currentYear} Projected Investment`, sub: 'YTD actual + remaining months projected', value: client.projected_year_investment },
     { label: 'All Time Investment', sub: 'Actual spend to date', value: client.all_time_investment },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {cards.map(card => (
         <div key={card.label} className="bg-white rounded-xl border border-slate-200 shadow-sm px-6 py-5">
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">{card.label}</p>
@@ -741,7 +742,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
       </div>
 
       <ClientInfoSection client={client} onUpdate={setClient} />
-      <InvestmentScorecards client={client as Client & { current_month_investment: number; ytd_investment: number; all_time_investment: number }} />
+      <InvestmentScorecards client={client as Client & { current_month_investment: number; ytd_investment: number; all_time_investment: number; projected_year_investment: number }} />
       <ContactsSection clientId={Number(id)} />
       <BudgetSection clientId={Number(id)} />
     </div>
