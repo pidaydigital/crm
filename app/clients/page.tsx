@@ -20,7 +20,7 @@ function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
     active: 'bg-green-100 text-green-800',
     inactive: 'bg-gray-100 text-gray-700',
-    prospect: 'bg-blue-100 text-blue-800',
+    prospect: 'bg-brand-100 text-brand-700',
   };
   return (
     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[status] ?? 'bg-gray-100 text-gray-700'}`}>
@@ -123,7 +123,7 @@ export default function ClientsPage() {
           </Link>
           <Link
             href="/clients/new"
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-700 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -140,12 +140,12 @@ export default function ClientsPage() {
           placeholder="Search clients..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="border border-slate-300 rounded-lg px-3 py-2 text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-slate-300 rounded-lg px-3 py-2 text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-brand-500"
         />
         <select
           value={statusFilter}
           onChange={e => setStatusFilter(e.target.value)}
-          className="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          className="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white"
         >
           <option value="all">All Statuses</option>
           <option value="active">Active</option>
@@ -160,7 +160,7 @@ export default function ClientsPage() {
           {clients.length === 0 ? (
             <>
               <p className="text-slate-500 mb-4">No clients yet. Add your first client to get started.</p>
-              <Link href="/clients/new" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
+              <Link href="/clients/new" className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-700">
                 Add Client
               </Link>
             </>
@@ -187,7 +187,7 @@ export default function ClientsPage() {
               {filtered.map((client) => (
                 <tr key={client.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-4 sm:px-6 py-4">
-                    <Link href={`/clients/${client.id}`} className="font-medium text-slate-800 hover:text-blue-600">
+                    <Link href={`/clients/${client.id}`} className="font-medium text-slate-800 hover:text-brand-600">
                       {client.name}
                     </Link>
                     <div className="sm:hidden text-xs text-slate-400 mt-0.5">
@@ -207,7 +207,7 @@ export default function ClientsPage() {
                         href={client.website.startsWith('http') ? client.website : `https://${client.website}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline truncate max-w-[160px] block"
+                        className="text-brand-500 hover:underline truncate max-w-[160px] block"
                       >
                         {client.website}
                       </a>
@@ -217,7 +217,7 @@ export default function ClientsPage() {
                     <div className="flex items-center justify-end gap-1 sm:gap-2">
                       <button
                         onClick={() => router.push(`/clients/${client.id}`)}
-                        className="text-slate-600 hover:text-blue-600 text-xs font-medium px-2 py-1 rounded hover:bg-blue-50"
+                        className="text-slate-600 hover:text-brand-600 text-xs font-medium px-2 py-1 rounded hover:bg-brand-50"
                       >
                         View
                       </button>

@@ -15,6 +15,7 @@ interface DashboardData {
     name: string;
     status: string;
     total_budget: number;
+    ytd_budget: number;
   }>;
   topExpenses: Array<{
     id: number;
@@ -29,7 +30,7 @@ function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
     active: 'bg-green-100 text-green-800',
     inactive: 'bg-gray-100 text-gray-700',
-    prospect: 'bg-blue-100 text-blue-800',
+    prospect: 'bg-brand-100 text-brand-700',
   };
   return (
     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${colors[status] ?? 'bg-gray-100 text-gray-700'}`}>
@@ -95,7 +96,7 @@ export default function DashboardPage() {
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Projected {data.currentYear} Revenue</p>
-          <p className="text-3xl font-bold text-blue-600">{formatCurrency(data.projectedRevenue)}</p>
+          <p className="text-3xl font-bold text-brand-600">{formatCurrency(data.projectedRevenue)}</p>
           <p className="text-xs text-slate-400 mt-1">Full year projection</p>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
@@ -119,19 +120,33 @@ export default function DashboardPage() {
           {data.topClientsBudget.length === 0 ? (
             <div className="px-6 py-8 text-center text-slate-400 text-sm">No budget data this month</div>
           ) : (
-            <ul className="divide-y divide-slate-100">
-              {data.topClientsBudget.map((client) => (
-                <li key={client.id} className="px-6 py-3 flex items-center justify-between hover:bg-slate-50">
-                  <div className="flex items-center gap-3">
-                    <Link href={`/clients/${client.id}`} className="text-sm font-medium text-slate-800 hover:text-blue-600">
-                      {client.name}
-                    </Link>
-                    <StatusBadge status={client.status} />
-                  </div>
-                  <span className="text-sm font-semibold text-green-600">{formatCurrency(client.total_budget)}</span>
-                </li>
-              ))}
-            </ul>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50">
+                    <th className="px-6 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
+                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Current Month</th>
+                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">YTD</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {data.topClientsBudget.map((client) => (
+                    <tr key={client.id} className="hover:bg-slate-50">
+                      <td className="px-6 py-3">
+                        <div className="flex items-center gap-3">
+                          <Link href={`/clients/${client.id}`} className="font-medium text-slate-800 hover:text-brand-600">
+                            {client.name}
+                          </Link>
+                          <StatusBadge status={client.status} />
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right font-semibold text-green-600">{formatCurrency(client.total_budget)}</td>
+                      <td className="px-4 py-3 text-right font-semibold text-slate-700">{formatCurrency(client.ytd_budget)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 

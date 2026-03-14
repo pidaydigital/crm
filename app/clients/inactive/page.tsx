@@ -80,7 +80,7 @@ export default function InactiveClientsPage() {
       ) : clients.length === 0 ? (
         <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
           <p className="text-slate-500">No inactive clients.</p>
-          <Link href="/clients" className="mt-4 inline-block text-blue-600 text-sm hover:underline">
+          <Link href="/clients" className="mt-4 inline-block text-brand-600 text-sm hover:underline">
             Back to Clients
           </Link>
         </div>
@@ -101,7 +101,7 @@ export default function InactiveClientsPage() {
               {clients.map((client) => (
                 <tr key={client.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-4 sm:px-6 py-4">
-                    <Link href={`/clients/${client.id}`} className="font-medium text-slate-800 hover:text-blue-600">
+                    <Link href={`/clients/${client.id}`} className="font-medium text-slate-800 hover:text-brand-600">
                       {client.name}
                     </Link>
                     <div className="sm:hidden text-xs text-slate-400 mt-0.5">

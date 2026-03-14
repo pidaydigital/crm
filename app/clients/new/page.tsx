@@ -81,7 +81,7 @@ export default function NewClientPage() {
               value={form.name}
               onChange={handleChange}
               placeholder="Acme Corp"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               autoFocus
             />
           </div>
@@ -95,7 +95,7 @@ export default function NewClientPage() {
                 value={form.industry}
                 onChange={handleChange}
                 placeholder="e.g. Technology, Healthcare"
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
             <div>
@@ -104,7 +104,7 @@ export default function NewClientPage() {
                 name="status"
                 value={form.status}
                 onChange={handleChange}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white"
               >
                 <option value="active">Active</option>
                 <option value="prospect">Prospect</option>
@@ -121,7 +121,7 @@ export default function NewClientPage() {
               value={form.website}
               onChange={handleChange}
               placeholder="https://example.com"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
           </div>
 
@@ -133,7 +133,7 @@ export default function NewClientPage() {
               onChange={handleChange}
               rows={4}
               placeholder="Any relevant notes about this client..."
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
             />
           </div>
 
@@ -141,7 +141,7 @@ export default function NewClientPage() {
             <button
               type="submit"
               disabled={saving}
-              className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-60 transition-colors"
+              className="bg-brand-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-brand-700 disabled:opacity-60 transition-colors"
             >
               {saving ? 'Creating...' : 'Create Client'}
             </button>

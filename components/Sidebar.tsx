@@ -105,17 +105,17 @@ export default function Sidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className={`hidden lg:flex ${collapsed ? 'w-16' : 'w-64'} h-screen bg-slate-900 text-white flex-col flex-shrink-0 transition-all duration-200 sticky top-0`}>
-        <div className={`${collapsed ? 'px-3' : 'px-6'} py-5 border-b border-slate-700 flex items-center justify-between`}>
+      <aside className={`hidden lg:flex ${collapsed ? 'w-16' : 'w-64'} h-screen bg-brand-600 text-white flex-col flex-shrink-0 transition-all duration-200 sticky top-0`}>
+        <div className={`${collapsed ? 'px-3' : 'px-6'} py-5 border-b border-brand-700 flex items-center justify-between`}>
           {!collapsed && (
             <div>
               <h1 className="text-xl font-bold text-white tracking-tight">CRM</h1>
-              <p className="text-slate-400 text-xs mt-0.5">Client Management</p>
+              <p className="text-brand-200 text-xs mt-0.5">Client Management</p>
             </div>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className={`${collapsed ? 'mx-auto' : ''} w-7 h-7 flex items-center justify-center rounded hover:bg-slate-700 text-slate-400 hover:text-white transition-colors`}
+            className={`${collapsed ? 'mx-auto' : ''} w-7 h-7 flex items-center justify-center rounded hover:bg-brand-700 text-brand-200 hover:text-white transition-colors`}
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,8 +136,8 @@ export default function Sidebar() {
               title={collapsed ? item.label : undefined}
               className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3 px-3'} py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive(item.href)
-                  ? 'bg-slate-700 text-white'
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  ? 'bg-brand-700 text-white'
+                  : 'text-brand-100 hover:bg-brand-800 hover:text-white'
               }`}
             >
               {item.icon}
@@ -146,11 +146,11 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        <div className="px-2 py-4 border-t border-slate-700">
+        <div className="px-2 py-4 border-t border-brand-700">
           <button
             onClick={handleLogout}
             title={collapsed ? 'Sign out' : undefined}
-            className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3 px-3'} w-full py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-colors`}
+            className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3 px-3'} w-full py-2.5 rounded-lg text-sm font-medium text-brand-100 hover:bg-brand-800 hover:text-white transition-colors`}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -158,22 +158,22 @@ export default function Sidebar() {
             </svg>
             {!collapsed && 'Sign out'}
           </button>
-          {!collapsed && <p className="text-slate-600 text-xs mt-3 px-3">v1.0.0</p>}
+          {!collapsed && <p className="text-brand-400 text-xs mt-3 px-3">v1.0.0</p>}
         </div>
       </aside>
 
       {/* Mobile bottom tab bar */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-700 safe-area-pb">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-brand-600 border-t border-brand-700 safe-area-pb">
         <div className="flex">
           {mobileTabItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={`flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors ${
-                isActive(item.href) ? 'text-white' : 'text-slate-500'
+                isActive(item.href) ? 'text-white' : 'text-brand-300'
               }`}
             >
-              <span className={`p-1 rounded-lg transition-colors ${isActive(item.href) ? 'bg-slate-700' : ''}`}>
+              <span className={`p-1 rounded-lg transition-colors ${isActive(item.href) ? 'bg-brand-700' : ''}`}>
                 {item.icon}
               </span>
               <span className="text-[9px] font-medium leading-none text-center">{item.label}</span>
@@ -183,10 +183,10 @@ export default function Sidebar() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={`flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors ${
-              mobileMenuOpen ? 'text-white' : 'text-slate-500'
+              mobileMenuOpen ? 'text-white' : 'text-brand-300'
             }`}
           >
-            <span className={`p-1 rounded-lg transition-colors ${mobileMenuOpen ? 'bg-slate-700' : ''}`}>
+            <span className={`p-1 rounded-lg transition-colors ${mobileMenuOpen ? 'bg-brand-700' : ''}`}>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
               </svg>
@@ -199,7 +199,7 @@ export default function Sidebar() {
         {mobileMenuOpen && (
           <>
             <div className="fixed inset-0 z-40" onClick={() => setMobileMenuOpen(false)} />
-            <div className="absolute bottom-full left-0 right-0 z-50 bg-slate-800 border-t border-slate-700 p-3 space-y-1">
+            <div className="absolute bottom-full left-0 right-0 z-50 bg-brand-800 border-t border-brand-700 p-3 space-y-1">
               {mobileMoreItems.map((item) => (
                 <Link
                   key={item.href}
@@ -207,8 +207,8 @@ export default function Sidebar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                     isActive(item.href)
-                      ? 'bg-slate-700 text-white'
-                      : 'text-slate-300 hover:bg-slate-700 hover:text-white'
+                      ? 'bg-brand-700 text-white'
+                      : 'text-brand-100 hover:bg-brand-700 hover:text-white'
                   }`}
                 >
                   {item.icon}
@@ -217,7 +217,7 @@ export default function Sidebar() {
               ))}
               <button
                 onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium text-brand-100 hover:bg-brand-700 hover:text-white transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}

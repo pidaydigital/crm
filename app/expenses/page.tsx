@@ -78,14 +78,14 @@ function StatCard({
   label: string; value: string; sub?: string; highlight?: boolean;
 }) {
   return (
-    <div className={`rounded-xl border p-6 ${highlight ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-200'}`}>
-      <p className={`text-xs font-semibold uppercase tracking-wider mb-1 ${highlight ? 'text-slate-400' : 'text-slate-500'}`}>
+    <div className={`rounded-xl border p-6 ${highlight ? 'bg-brand-800 border-brand-700 text-white' : 'bg-white border-slate-200'}`}>
+      <p className={`text-xs font-semibold uppercase tracking-wider mb-1 ${highlight ? 'text-brand-300' : 'text-slate-500'}`}>
         {label}
       </p>
       <p className={`text-3xl font-bold tabular-nums ${highlight ? 'text-white' : 'text-slate-900'}`}>
         {value}
       </p>
-      {sub && <p className={`text-xs mt-1.5 ${highlight ? 'text-slate-400' : 'text-slate-400'}`}>{sub}</p>}
+      {sub && <p className={`text-xs mt-1.5 ${highlight ? 'text-brand-300' : 'text-slate-400'}`}>{sub}</p>}
     </div>
   );
 }
@@ -251,7 +251,7 @@ export default function ExpensesPage() {
           </div>
           <button
             onClick={openAdd}
-            className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
           >
             <span className="text-lg leading-none">+</span> Add Expense
           </button>
@@ -311,9 +311,9 @@ export default function ExpensesPage() {
                         <div
                           className={`w-full rounded-t transition-all ${
                             total === 0 ? 'bg-slate-100' :
-                            isSelected ? 'bg-slate-800' :
-                            isCurrent ? 'bg-slate-600 group-hover:bg-slate-700' :
-                            'bg-slate-300 group-hover:bg-slate-400'
+                            isSelected ? 'bg-brand-600' :
+                            isCurrent ? 'bg-brand-500 group-hover:bg-brand-600' :
+                            'bg-brand-200 group-hover:bg-brand-300'
                           }`}
                           style={{ height: total > 0 ? `${heightPct}%` : '4px' }}
                         />
@@ -352,7 +352,7 @@ export default function ExpensesPage() {
             {displayedExpenses.length === 0 ? (
               <div className="px-6 py-10 text-center text-slate-400 text-sm">
                 No expenses found.{' '}
-                <button onClick={openAdd} className="text-blue-600 hover:underline">Add one.</button>
+                <button onClick={openAdd} className="text-brand-600 hover:underline">Add one.</button>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -511,7 +511,7 @@ export default function ExpensesPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-4 py-2 text-sm bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg disabled:opacity-50 transition-colors"
+                className="px-4 py-2 text-sm bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg disabled:opacity-50 transition-colors"
               >
                 {saving ? 'Saving…' : editingExpense ? 'Save Changes' : 'Add Expense'}
               </button>

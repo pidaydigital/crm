@@ -20,7 +20,7 @@ function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
     active: 'bg-green-100 text-green-800',
     inactive: 'bg-gray-100 text-gray-700',
-    prospect: 'bg-blue-100 text-blue-800',
+    prospect: 'bg-brand-100 text-brand-700',
   };
   return (
     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${colors[status] ?? 'bg-gray-100 text-gray-700'}`}>
@@ -70,7 +70,7 @@ export default function ContactsPage() {
           placeholder="Search contacts by name, email, role, or client..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="border border-slate-300 rounded-lg px-3 py-2 text-sm w-full sm:w-80 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-slate-300 rounded-lg px-3 py-2 text-sm w-full sm:w-80 focus:outline-none focus:ring-2 focus:ring-brand-500"
         />
       </div>
 
@@ -82,7 +82,7 @@ export default function ContactsPage() {
             <>
               <p className="text-slate-500 mb-2">No contacts yet.</p>
               <p className="text-slate-400 text-sm">Add contacts from a client page.</p>
-              <Link href="/clients" className="mt-3 inline-block text-blue-600 text-sm hover:underline">Go to Clients</Link>
+              <Link href="/clients" className="mt-3 inline-block text-brand-600 text-sm hover:underline">Go to Clients</Link>
             </>
           ) : (
             <p className="text-slate-500">No contacts match your search.</p>
@@ -108,10 +108,10 @@ export default function ContactsPage() {
                   <td className="px-4 sm:px-6 py-4">
                     <span className="font-medium text-slate-800">{contact.name}</span>
                     <div className="sm:hidden text-xs text-slate-400 mt-0.5 space-y-0.5">
-                      {contact.email && <div><a href={`mailto:${contact.email}`} className="text-blue-600">{contact.email}</a></div>}
+                      {contact.email && <div><a href={`mailto:${contact.email}`} className="text-brand-600">{contact.email}</a></div>}
                       {contact.phone && (
                         <div>
-                          <a href={`tel:${contact.phone}`} className="text-blue-600 inline-flex items-center gap-1">
+                          <a href={`tel:${contact.phone}`} className="text-brand-600 inline-flex items-center gap-1">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                             </svg>
@@ -124,17 +124,17 @@ export default function ContactsPage() {
                   <td className="px-6 py-4 text-slate-500 hidden md:table-cell">{contact.role || '—'}</td>
                   <td className="px-6 py-4 hidden sm:table-cell">
                     {contact.email ? (
-                      <a href={`mailto:${contact.email}`} className="text-blue-600 hover:underline">{contact.email}</a>
+                      <a href={`mailto:${contact.email}`} className="text-brand-600 hover:underline">{contact.email}</a>
                     ) : '—'}
                   </td>
                   <td className="px-6 py-4 text-slate-500 hidden lg:table-cell">
                     {contact.phone ? (
-                      <a href={`tel:${contact.phone}`} className="hover:text-blue-600">{contact.phone}</a>
+                      <a href={`tel:${contact.phone}`} className="hover:text-brand-600">{contact.phone}</a>
                     ) : '—'}
                   </td>
                   <td className="px-4 sm:px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <Link href={`/clients/${contact.client_id}`} className="text-blue-600 hover:underline font-medium">
+                      <Link href={`/clients/${contact.client_id}`} className="text-brand-600 hover:underline font-medium">
                         {contact.client_name}
                       </Link>
                       <StatusBadge status={contact.client_status} />

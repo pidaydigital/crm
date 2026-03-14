@@ -10,7 +10,7 @@ function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
     active: 'bg-green-100 text-green-800',
     inactive: 'bg-gray-100 text-gray-700',
-    prospect: 'bg-blue-100 text-blue-800',
+    prospect: 'bg-brand-100 text-brand-700',
   };
   return (
     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[status] ?? 'bg-gray-100 text-gray-700'}`}>
@@ -86,14 +86,14 @@ function ClientInfoSection({ client, onUpdate }: { client: Client; onUpdate: (c:
             </div>
             {client.industry && <p className="text-sm text-slate-500">{client.industry}</p>}
           </div>
-          <button onClick={() => setEditing(true)} className="text-sm text-blue-600 hover:underline font-medium">Edit</button>
+          <button onClick={() => setEditing(true)} className="text-sm text-brand-600 hover:underline font-medium">Edit</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div>
             <span className="text-slate-500 font-medium">Website</span>
             <div className="mt-0.5">
               {client.website ? (
-                <a href={client.website.startsWith('http') ? client.website : `https://${client.website}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                <a href={client.website.startsWith('http') ? client.website : `https://${client.website}`} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">
                   {client.website}
                 </a>
               ) : <span className="text-slate-400">—</span>}
@@ -124,18 +124,18 @@ function ClientInfoSection({ client, onUpdate }: { client: Client; onUpdate: (c:
         <div>
           <label className="block text-xs font-medium text-slate-600 mb-1">Name <span className="text-red-500">*</span></label>
           <input type="text" name="name" value={form.name} onChange={handleChange}
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">Industry</label>
             <input type="text" name="industry" value={form.industry} onChange={handleChange}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">Status</label>
             <select name="status" value={form.status} onChange={handleChange}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
               <option value="active">Active</option>
               <option value="prospect">Prospect</option>
               <option value="inactive">Inactive</option>
@@ -145,16 +145,16 @@ function ClientInfoSection({ client, onUpdate }: { client: Client; onUpdate: (c:
         <div>
           <label className="block text-xs font-medium text-slate-600 mb-1">Website</label>
           <input type="text" name="website" value={form.website} onChange={handleChange}
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
         </div>
         <div>
           <label className="block text-xs font-medium text-slate-600 mb-1">Notes</label>
           <textarea name="notes" value={form.notes} onChange={handleChange} rows={3}
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none" />
         </div>
         <div className="flex gap-2">
           <button onClick={handleSave} disabled={saving}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-60">
+            className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-700 disabled:opacity-60">
             {saving ? 'Saving...' : 'Save'}
           </button>
           <button onClick={handleCancel} className="text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-100">Cancel</button>
@@ -210,12 +210,12 @@ function ContactRow({
     return (
       <tr className="hover:bg-slate-50">
         <td className="px-4 py-3 font-medium text-slate-800">{contact.name}</td>
-        <td className="px-4 py-3 text-slate-500">{contact.email ? <a href={`mailto:${contact.email}`} className="hover:text-blue-600">{contact.email}</a> : '—'}</td>
+        <td className="px-4 py-3 text-slate-500">{contact.email ? <a href={`mailto:${contact.email}`} className="hover:text-brand-600">{contact.email}</a> : '—'}</td>
         <td className="px-4 py-3 text-slate-500">{contact.phone || '—'}</td>
         <td className="px-4 py-3 text-slate-500">{contact.role || '—'}</td>
         <td className="px-4 py-3 text-slate-400 text-xs max-w-[200px] truncate">{contact.notes || '—'}</td>
         <td className="px-4 py-3 text-right">
-          <button onClick={() => setEditing(true)} className="text-xs text-blue-600 hover:underline mr-3">Edit</button>
+          <button onClick={() => setEditing(true)} className="text-xs text-brand-600 hover:underline mr-3">Edit</button>
           <button onClick={() => onDelete(contact.id)} className="text-xs text-red-400 hover:text-red-600 hover:underline">Delete</button>
         </td>
       </tr>
@@ -223,29 +223,29 @@ function ContactRow({
   }
 
   return (
-    <tr className="bg-blue-50">
+    <tr className="bg-brand-50">
       <td className="px-4 py-2">
         <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Name*"
-          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
       </td>
       <td className="px-4 py-2">
         <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email"
-          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
       </td>
       <td className="px-4 py-2">
         <input type="text" name="phone" value={form.phone} onChange={handleChange} placeholder="Phone"
-          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
       </td>
       <td className="px-4 py-2">
         <input type="text" name="role" value={form.role} onChange={handleChange} placeholder="Role/Title"
-          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
       </td>
       <td className="px-4 py-2">
         <input type="text" name="notes" value={form.notes} onChange={handleChange} placeholder="Notes"
-          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+          className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
       </td>
       <td className="px-4 py-2 text-right whitespace-nowrap">
-        <button onClick={handleSave} disabled={saving} className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 mr-1 disabled:opacity-60">
+        <button onClick={handleSave} disabled={saving} className="text-xs bg-brand-600 text-white px-2 py-1 rounded hover:bg-brand-700 mr-1 disabled:opacity-60">
           {saving ? '...' : 'Save'}
         </button>
         <button onClick={() => setEditing(false)} className="text-xs text-slate-500 hover:text-slate-700">Cancel</button>
@@ -301,7 +301,7 @@ function ContactsSection({ clientId }: { clientId: number }) {
       <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <h3 className="font-semibold text-slate-700">Contacts <span className="text-slate-400 font-normal text-sm">({contacts.length})</span></h3>
         {!addingNew && (
-          <button onClick={() => setAddingNew(true)} className="text-xs text-blue-600 hover:underline font-medium">+ Add Contact</button>
+          <button onClick={() => setAddingNew(true)} className="text-xs text-brand-600 hover:underline font-medium">+ Add Contact</button>
         )}
       </div>
       {loading ? (
@@ -332,23 +332,23 @@ function ContactsSection({ clientId }: { clientId: number }) {
                 <tr className="bg-green-50">
                   <td className="px-4 py-2">
                     <input type="text" name="name" value={newForm.name} onChange={handleNewChange} placeholder="Name*" autoFocus
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
                   </td>
                   <td className="px-4 py-2">
                     <input type="email" name="email" value={newForm.email} onChange={handleNewChange} placeholder="Email"
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
                   </td>
                   <td className="px-4 py-2">
                     <input type="text" name="phone" value={newForm.phone} onChange={handleNewChange} placeholder="Phone"
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
                   </td>
                   <td className="px-4 py-2">
                     <input type="text" name="role" value={newForm.role} onChange={handleNewChange} placeholder="Role/Title"
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
                   </td>
                   <td className="px-4 py-2">
                     <input type="text" name="notes" value={newForm.notes} onChange={handleNewChange} placeholder="Notes"
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500" />
                   </td>
                   <td className="px-4 py-2 text-right whitespace-nowrap">
                     <button onClick={handleAddContact} disabled={saving}
@@ -364,7 +364,7 @@ function ContactsSection({ clientId }: { clientId: number }) {
                 <tr>
                   <td colSpan={6} className="px-4 py-6 text-center text-slate-400 text-sm">
                     No contacts yet.{' '}
-                    <button onClick={() => setAddingNew(true)} className="text-blue-600 hover:underline">Add a contact</button>
+                    <button onClick={() => setAddingNew(true)} className="text-brand-600 hover:underline">Add a contact</button>
                   </td>
                 </tr>
               )}
@@ -543,7 +543,7 @@ function BudgetSection({ clientId }: { clientId: number }) {
           </div>
           <button
             onClick={() => setAddingService(true)}
-            className="text-xs text-blue-600 hover:underline font-medium"
+            className="text-xs text-brand-600 hover:underline font-medium"
           >
             + Add Service
           </button>
@@ -555,7 +555,7 @@ function BudgetSection({ clientId }: { clientId: number }) {
       ) : allServices.length === 0 ? (
         <div className="px-6 py-8 text-center text-slate-400 text-sm">
           No services yet.{' '}
-          <button onClick={() => setAddingService(true)} className="text-blue-600 hover:underline">
+          <button onClick={() => setAddingService(true)} className="text-brand-600 hover:underline">
             Add a service
           </button>
         </div>
@@ -595,12 +595,12 @@ function BudgetSection({ clientId }: { clientId: number }) {
                             if (e.key === 'Escape') setRenamingService(null);
                           }}
                           autoFocus
-                          className="border border-blue-400 rounded px-1.5 py-0.5 text-xs w-28 focus:outline-none focus:ring-1 focus:ring-blue-500 bg-blue-50"
+                          className="border border-brand-400 rounded px-1.5 py-0.5 text-xs w-28 focus:outline-none focus:ring-1 focus:ring-brand-500 bg-brand-50"
                         />
                       ) : (
                         <button
                           onClick={() => startRenameService(service)}
-                          className="hover:text-blue-600 hover:underline text-left"
+                          className="hover:text-brand-600 hover:underline text-left"
                           title="Click to rename"
                         >
                           {service}
@@ -622,16 +622,16 @@ function BudgetSection({ clientId }: { clientId: number }) {
                               autoFocus
                               min="0"
                               placeholder="0"
-                              className="w-full border border-blue-400 rounded px-1.5 py-1 text-right focus:outline-none focus:ring-1 focus:ring-blue-500 bg-blue-50"
+                              className="w-full border border-brand-400 rounded px-1.5 py-1 text-right focus:outline-none focus:ring-1 focus:ring-brand-500 bg-brand-50"
                               disabled={cellSaving}
                             />
                           ) : (
                             <button
                               onClick={() => startEdit(service, month)}
-                              className={`w-full px-1.5 py-1.5 rounded text-right hover:bg-blue-50 transition-colors ${
+                              className={`w-full px-1.5 py-1.5 rounded text-right hover:bg-brand-50 transition-colors ${
                                 entry
-                                  ? 'text-slate-800 font-semibold hover:text-blue-700'
-                                  : 'text-slate-300 hover:text-blue-400'
+                                  ? 'text-slate-800 font-semibold hover:text-brand-700'
+                                  : 'text-slate-300 hover:text-brand-400'
                               }`}
                             >
                               {entry ? formatCurrency(entry.amount) : '—'}
@@ -691,11 +691,11 @@ function BudgetSection({ clientId }: { clientId: number }) {
             }}
             placeholder="Service name (e.g. SEO, PPC, Social Media)"
             autoFocus
-            className="border border-slate-300 rounded px-3 py-1.5 text-xs w-72 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="border border-slate-300 rounded px-3 py-1.5 text-xs w-72 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
           <button
             onClick={handleAddService}
-            className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700"
+            className="text-xs bg-brand-600 text-white px-3 py-1.5 rounded hover:bg-brand-700"
           >
             Add
           </button>
@@ -772,7 +772,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
     return (
       <div className="p-8">
         <div className="text-red-500 mb-4">Client not found.</div>
-        <Link href="/clients" className="text-blue-600 hover:underline text-sm">← Back to Clients</Link>
+        <Link href="/clients" className="text-brand-600 hover:underline text-sm">← Back to Clients</Link>
       </div>
     );
   }

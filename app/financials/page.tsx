@@ -112,7 +112,7 @@ export default function FinancialsPage() {
               )}
             </div>
             {/* Profit */}
-            <div className={`rounded-xl border p-6 ${data.profit >= 0 ? 'bg-slate-800 border-slate-700' : 'bg-red-900 border-red-800'}`}>
+            <div className={`rounded-xl border p-6 ${data.profit >= 0 ? 'bg-brand-800 border-brand-700' : 'bg-red-900 border-red-800'}`}>
               <p className="text-xs font-semibold uppercase tracking-wider mb-1 text-slate-400">Net Profit</p>
               <p className={`text-3xl font-bold tabular-nums ${data.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                 {formatCurrency(data.profit)}
@@ -170,7 +170,7 @@ export default function FinancialsPage() {
                   <h3 className="font-semibold text-slate-700">Revenue by Client</h3>
                   <p className="text-xs text-slate-400 mt-0.5">{data.investmentsByClient.length} client{data.investmentsByClient.length !== 1 ? 's' : ''} with revenue</p>
                 </div>
-                <Link href="/investments" className="text-xs text-blue-600 hover:underline font-medium">
+                <Link href="/investments" className="text-xs text-brand-600 hover:underline font-medium">
                   View all
                 </Link>
               </div>
@@ -187,12 +187,12 @@ export default function FinancialsPage() {
                         <div className="flex-1 min-w-0">
                           <Link
                             href={`/clients/${client.id}`}
-                            className="text-sm font-medium text-slate-800 hover:text-blue-600 hover:underline truncate block"
+                            className="text-sm font-medium text-slate-800 hover:text-brand-600 hover:underline truncate block"
                           >
                             {client.name}
                           </Link>
                           <div className="mt-1.5 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                            <div className="h-full bg-slate-600 rounded-full" style={{ width: `${pct}%` }} />
+                            <div className="h-full bg-brand-500 rounded-full" style={{ width: `${pct}%` }} />
                           </div>
                         </div>
                         <span className="text-sm font-semibold text-slate-700 tabular-nums whitespace-nowrap">
@@ -217,7 +217,7 @@ export default function FinancialsPage() {
                   <h3 className="font-semibold text-slate-700">Expenses by Category</h3>
                   <p className="text-xs text-slate-400 mt-0.5">{data.expensesByCategory.length} categor{data.expensesByCategory.length !== 1 ? 'ies' : 'y'} with expenses</p>
                 </div>
-                <Link href="/expenses" className="text-xs text-blue-600 hover:underline font-medium">
+                <Link href="/expenses" className="text-xs text-brand-600 hover:underline font-medium">
                   View all
                 </Link>
               </div>

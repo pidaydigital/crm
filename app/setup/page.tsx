@@ -55,22 +55,22 @@ export default function SetupPage() {
 
   if (checking) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="text-slate-400 text-sm">Loading...</div>
+      <div className="min-h-screen bg-brand-950 flex items-center justify-center">
+        <div className="text-brand-300 text-sm">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-brand-950 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-white">CRM</h1>
-          <p className="text-slate-400 text-sm mt-1">Create your account to get started</p>
+          <p className="text-brand-300 text-sm mt-1">Create your account to get started</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-slate-900 rounded-xl border border-slate-700 p-6 space-y-4">
-          <div className="bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm rounded-lg px-4 py-3">
+        <form onSubmit={handleSubmit} className="bg-brand-900 rounded-xl border border-brand-700 p-6 space-y-4">
+          <div className="bg-brand-500/10 border border-brand-500/30 text-brand-200 text-sm rounded-lg px-4 py-3">
             First-time setup — create your owner account.
           </div>
 
@@ -81,12 +81,12 @@ export default function SetupPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Username</label>
+            <label className="block text-sm font-medium text-brand-200 mb-1.5">Username</label>
             <input
               type="text"
               value={username}
               onChange={e => setUsername(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full bg-brand-800 border border-brand-500 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400"
               placeholder="Choose a username"
               autoComplete="username"
               required
@@ -94,12 +94,12 @@ export default function SetupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+            <label className="block text-sm font-medium text-brand-200 mb-1.5">Password</label>
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full bg-brand-800 border border-brand-500 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400"
               placeholder="At least 8 characters"
               autoComplete="new-password"
               required
@@ -107,12 +107,12 @@ export default function SetupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Confirm password</label>
+            <label className="block text-sm font-medium text-brand-200 mb-1.5">Confirm password</label>
             <input
               type="password"
               value={confirm}
               onChange={e => setConfirm(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full bg-brand-800 border border-brand-500 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400"
               placeholder="Repeat your password"
               autoComplete="new-password"
               required
@@ -122,7 +122,7 @@ export default function SetupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg py-2.5 text-sm transition-colors mt-2"
+            className="w-full bg-brand-600 hover:bg-brand-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg py-2.5 text-sm transition-colors mt-2"
           >
             {loading ? 'Creating account...' : 'Create account'}
           </button>

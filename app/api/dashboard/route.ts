@@ -18,7 +18,9 @@ export async function GET() {
       db.execute(`SELECT COUNT(*) as count FROM clients WHERE status = 'active' AND archived = 0`),
       db.execute({
         sql: `
-          SELECT c.id, c.name, c.status, COALESCE(SUM(b.amount), 0) as total_budget
+          SELECT c.id, c.name, c.status,
+            COALESCE(SUM(b.amount), 0) as total_budget,
+            COALESCE((SELECT SUM(b2.amount) FROM budget_entries b2 WHERE b2.client_id = c.id AND b2.month >= ? AND b2.month <= ?), 0) as ytd_budget
           FROM clients c
           LEFT JOIN budget_entries b ON b.client_id = c.id AND b.month = ?
           WHERE c.archived = 0 AND c.status != 'inactive'
@@ -26,7 +28,7 @@ export async function GET() {
           ORDER BY total_budget DESC
           LIMIT 5
         `,
-        args: [currentMonth],
+        args: [`${currentYear}-01`, currentMonth, currentMonth],
       }),
       // Top expenses for current month
       db.execute({

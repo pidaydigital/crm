@@ -148,7 +148,7 @@ export default function UsersPage() {
         </div>
         <button
           onClick={() => { setShowAddForm(true); setAddError(''); }}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
           Add user
         </button>
@@ -169,7 +169,7 @@ export default function UsersPage() {
                   type="text"
                   value={newUsername}
                   onChange={e => setNewUsername(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                   required
                 />
               </div>
@@ -179,14 +179,14 @@ export default function UsersPage() {
                   type="password"
                   value={newPassword}
                   onChange={e => setNewPassword(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                   placeholder="Min. 8 characters"
                   required
                 />
               </div>
             </div>
             <div className="flex gap-2 pt-1">
-              <button type="submit" disabled={addLoading} className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+              <button type="submit" disabled={addLoading} className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
                 {addLoading ? 'Creating...' : 'Create user'}
               </button>
               <button type="button" onClick={() => setShowAddForm(false)} className="text-slate-600 hover:text-slate-800 text-sm px-4 py-2 rounded-lg transition-colors">
@@ -219,11 +219,11 @@ export default function UsersPage() {
                         type="text"
                         value={renameValue}
                         onChange={e => setRenameValue(e.target.value)}
-                        className="border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500 w-36"
+                        className="border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:border-brand-500 w-36"
                         autoFocus
                       />
                       {renameError && <span className="text-red-500 text-xs">{renameError}</span>}
-                      <button onClick={() => renameUser(user.id)} disabled={renameLoading} className="text-blue-600 hover:text-blue-800 text-xs font-medium">Save</button>
+                      <button onClick={() => renameUser(user.id)} disabled={renameLoading} className="text-brand-600 hover:text-brand-800 text-xs font-medium">Save</button>
                       <button onClick={() => { setRenamingId(null); setRenameError(''); }} className="text-slate-400 hover:text-slate-600 text-xs">Cancel</button>
                     </div>
                   ) : (
@@ -231,7 +231,7 @@ export default function UsersPage() {
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium text-slate-800">{user.username}</span>
                         {me?.userId === user.id && (
-                          <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-medium">you</span>
+                          <span className="text-xs bg-brand-100 text-brand-700 px-1.5 py-0.5 rounded font-medium">you</span>
                         )}
                       </div>
                       <div className="sm:hidden text-xs text-slate-400 mt-0.5 capitalize">{user.role}</div>
@@ -304,7 +304,7 @@ export default function UsersPage() {
                   type="password"
                   value={newPw}
                   onChange={e => setNewPw(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                   placeholder="Min. 8 characters"
                 />
               </div>
@@ -314,7 +314,7 @@ export default function UsersPage() {
                   type="password"
                   value={confirmPw}
                   onChange={e => setConfirmPw(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                   placeholder="Repeat password"
                 />
               </div>
@@ -323,7 +323,7 @@ export default function UsersPage() {
               <button
                 onClick={() => changePassword(changingPasswordFor)}
                 disabled={pwLoading}
-                className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
               >
                 {pwLoading ? 'Saving...' : 'Update password'}
               </button>

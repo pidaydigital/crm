@@ -58,22 +58,22 @@ function StatCard({
   highlight?: boolean;
 }) {
   return (
-    <div className={`rounded-xl border p-6 ${highlight ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-200'}`}>
-      <p className={`text-xs font-semibold uppercase tracking-wider mb-1 ${highlight ? 'text-slate-400' : 'text-slate-500'}`}>
+    <div className={`rounded-xl border p-6 ${highlight ? 'bg-brand-800 border-brand-700 text-white' : 'bg-white border-slate-200'}`}>
+      <p className={`text-xs font-semibold uppercase tracking-wider mb-1 ${highlight ? 'text-brand-300' : 'text-slate-500'}`}>
         {label}
       </p>
       <p className={`text-3xl font-bold tabular-nums ${highlight ? 'text-white' : 'text-slate-900'}`}>
         {value}
       </p>
       {sub && (
-        <p className={`text-xs mt-1.5 ${highlight ? 'text-slate-400' : 'text-slate-400'}`}>{sub}</p>
+        <p className={`text-xs mt-1.5 ${highlight ? 'text-brand-300' : 'text-slate-400'}`}>{sub}</p>
       )}
       {projected && (
-        <div className={`mt-3 pt-3 border-t ${highlight ? 'border-slate-700' : 'border-slate-100'}`}>
-          <p className={`text-xs ${highlight ? 'text-slate-500' : 'text-slate-400'}`}>
+        <div className={`mt-3 pt-3 border-t ${highlight ? 'border-brand-700' : 'border-slate-100'}`}>
+          <p className={`text-xs ${highlight ? 'text-brand-400' : 'text-slate-400'}`}>
             {projectedLabel ?? 'Projected'}
           </p>
-          <p className={`text-base font-semibold tabular-nums mt-0.5 ${highlight ? 'text-slate-300' : 'text-slate-500'}`}>
+          <p className={`text-base font-semibold tabular-nums mt-0.5 ${highlight ? 'text-brand-200' : 'text-slate-500'}`}>
             {projected}
           </p>
         </div>
@@ -204,7 +204,7 @@ export default function InvestmentsPage() {
                       <td className="px-4 py-2.5 bg-white border-r border-slate-100 sticky left-0 z-10 hover:bg-slate-50/40">
                         <Link
                           href={`/clients/${client.id}`}
-                          className="font-medium text-slate-700 hover:text-blue-600 hover:underline"
+                          className="font-medium text-slate-700 hover:text-brand-600 hover:underline"
                         >
                           {client.name}
                         </Link>
@@ -265,7 +265,7 @@ export default function InvestmentsPage() {
             {activeClients.length === 0 ? (
               <div className="px-6 py-8 text-center text-slate-400 text-sm">
                 No budget data yet.{' '}
-                <Link href="/clients" className="text-blue-600 hover:underline">Go to Clients</Link> to add budgets.
+                <Link href="/clients" className="text-brand-600 hover:underline">Go to Clients</Link> to add budgets.
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -293,7 +293,7 @@ export default function InvestmentsPage() {
                       <td className="px-3 sm:px-4 py-3">
                         <Link
                           href={`/clients/${client.id}`}
-                          className="font-medium text-slate-800 hover:text-blue-600 hover:underline"
+                          className="font-medium text-slate-800 hover:text-brand-600 hover:underline"
                         >
                           {client.name}
                         </Link>
@@ -301,7 +301,7 @@ export default function InvestmentsPage() {
                       <td className="px-4 py-3 hidden sm:table-cell">
                         <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
                           client.status === 'active' ? 'bg-green-100 text-green-800' :
-                          client.status === 'prospect' ? 'bg-blue-100 text-blue-800' :
+                          client.status === 'prospect' ? 'bg-brand-100 text-brand-700' :
                           'bg-gray-100 text-gray-600'
                         }`}>
                           {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
