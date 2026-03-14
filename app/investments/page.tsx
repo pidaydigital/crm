@@ -128,7 +128,7 @@ export default function InvestmentsPage() {
       {/* Header */}
       <div className="mb-6 sm:mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Investments</h2>
+          <h2 className="text-2xl font-bold text-slate-800">Client Investments</h2>
           <p className="text-slate-500 text-sm mt-1">Total spend across all clients and services</p>
         </div>
         {/* Year selector */}
