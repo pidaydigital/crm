@@ -176,7 +176,7 @@ export default function Sidebar() {
               <span className={`p-1 rounded-lg transition-colors ${isActive(item.href) ? 'bg-slate-700' : ''}`}>
                 {item.icon}
               </span>
-              <span className="text-[9px] font-medium leading-none">{item.label}</span>
+              <span className="text-[9px] font-medium leading-none text-center">{item.label}</span>
             </Link>
           ))}
           {/* More menu toggle */}
