@@ -5,10 +5,11 @@ import Link from 'next/link';
 
 interface DashboardData {
   activeClients: number;
-  prospectClients: number;
-  totalClients: number;
-  currentMonthBudget: number;
   currentMonth: string;
+  currentYear: string;
+  ytdRevenue: number;
+  projectedRevenue: number;
+  ytdExpenses: number;
   topClientsBudget: Array<{
     id: number;
     name: string;
@@ -21,11 +22,6 @@ interface DashboardData {
     category: string | null;
     amount: number;
     date: string;
-  }>;
-  monthlyChart: Array<{
-    month: string;
-    revenue: number;
-    expenses: number;
   }>;
 }
 
@@ -93,24 +89,23 @@ export default function DashboardPage() {
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">YTD Revenue</p>
+          <p className="text-3xl font-bold text-green-600">{formatCurrency(data.ytdRevenue)}</p>
+          <p className="text-xs text-slate-400 mt-1">{data.currentYear} year to date</p>
+        </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Projected {data.currentYear} Revenue</p>
+          <p className="text-3xl font-bold text-blue-600">{formatCurrency(data.projectedRevenue)}</p>
+          <p className="text-xs text-slate-400 mt-1">Full year projection</p>
+        </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">YTD Expenses</p>
+          <p className="text-3xl font-bold text-red-600">{formatCurrency(data.ytdExpenses)}</p>
+          <p className="text-xs text-slate-400 mt-1">{data.currentYear} year to date</p>
+        </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Active Clients</p>
           <p className="text-3xl font-bold text-slate-800">{data.activeClients}</p>
-          <p className="text-xs text-slate-400 mt-1">{data.totalClients} total</p>
-        </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Prospects</p>
-          <p className="text-3xl font-bold text-blue-600">{data.prospectClients}</p>
-          <p className="text-xs text-slate-400 mt-1">In pipeline</p>
-        </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Budget This Month</p>
-          <p className="text-3xl font-bold text-green-600">{formatCurrency(data.currentMonthBudget)}</p>
-          <p className="text-xs text-slate-400 mt-1">Across all clients</p>
-        </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Total Clients</p>
-          <p className="text-3xl font-bold text-slate-800">{data.totalClients}</p>
-          <p className="text-xs text-slate-400 mt-1">All statuses</p>
         </div>
       </div>
 
@@ -165,56 +160,6 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Revenue & Expenses by Month */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm xl:col-span-2">
-          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h3 className="font-semibold text-slate-700">Revenue &amp; Expenses by Month</h3>
-            <div className="flex items-center gap-4 text-xs text-slate-500">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-700 inline-block" /> Revenue
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-400 inline-block" /> Expenses
-              </span>
-            </div>
-          </div>
-          {(() => {
-            const maxVal = Math.max(...data.monthlyChart.map(m => Math.max(m.revenue, m.expenses)), 1);
-            return (
-              <div className="px-6 py-6">
-                <div className="flex items-end gap-3 sm:gap-5" style={{ height: '200px' }}>
-                  {data.monthlyChart.map((m) => {
-                    const revHeight = (m.revenue / maxVal) * 100;
-                    const expHeight = (m.expenses / maxVal) * 100;
-                    const [year, mon] = m.month.split('-');
-                    const label = new Date(Number(year), Number(mon) - 1, 1).toLocaleString('en-US', { month: 'short' });
-                    return (
-                      <div key={m.month} className="flex-1 flex flex-col items-center gap-1 h-full">
-                        <div className="flex-1 flex items-end gap-1 w-full">
-                          <div className="flex-1 flex flex-col justify-end h-full">
-                            <div
-                              className="bg-slate-700 rounded-t w-full transition-all"
-                              style={{ height: `${revHeight}%`, minHeight: m.revenue > 0 ? '4px' : '0' }}
-                              title={`Revenue: ${formatCurrency(m.revenue)}`}
-                            />
-                          </div>
-                          <div className="flex-1 flex flex-col justify-end h-full">
-                            <div
-                              className="bg-red-400 rounded-t w-full transition-all"
-                              style={{ height: `${expHeight}%`, minHeight: m.expenses > 0 ? '4px' : '0' }}
-                              title={`Expenses: ${formatCurrency(m.expenses)}`}
-                            />
-                          </div>
-                        </div>
-                        <span className="text-xs text-slate-400 mt-1">{label}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })()}
-        </div>
       </div>
     </div>
   );
