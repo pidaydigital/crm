@@ -96,8 +96,8 @@ export default function ClientsPage() {
   });
 
   return (
-    <div className="p-8">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Clients</h2>
           <p className="text-slate-500 text-sm mt-1">{clients.length} total clients</p>
@@ -131,7 +131,7 @@ export default function ClientsPage() {
           placeholder="Search clients..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="border border-slate-300 rounded-lg px-3 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-slate-300 rounded-lg px-3 py-2 text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <select
           value={statusFilter}
@@ -162,33 +162,38 @@ export default function ClientsPage() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50">
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Industry</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Contacts</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Budget (This Month)</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Website</th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Industry</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Contacts</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Budget</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Website</th>
+                <th className="px-4 sm:px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filtered.map((client) => (
                 <tr key={client.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4">
+                  <td className="px-4 sm:px-6 py-4">
                     <Link href={`/clients/${client.id}`} className="font-medium text-slate-800 hover:text-blue-600">
                       {client.name}
                     </Link>
+                    <div className="sm:hidden text-xs text-slate-400 mt-0.5">
+                      <StatusBadge status={client.status} />
+                      {client.current_month_budget > 0 && <span className="ml-2">{formatCurrency(client.current_month_budget)}</span>}
+                    </div>
                   </td>
-                  <td className="px-6 py-4 text-slate-500">{client.industry || '—'}</td>
-                  <td className="px-6 py-4"><StatusBadge status={client.status} /></td>
-                  <td className="px-6 py-4 text-slate-600">{client.contact_count}</td>
-                  <td className="px-6 py-4 text-slate-600 font-medium">
+                  <td className="px-6 py-4 text-slate-500 hidden md:table-cell">{client.industry || '—'}</td>
+                  <td className="px-6 py-4 hidden sm:table-cell"><StatusBadge status={client.status} /></td>
+                  <td className="px-6 py-4 text-slate-600 hidden lg:table-cell">{client.contact_count}</td>
+                  <td className="px-6 py-4 text-slate-600 font-medium hidden sm:table-cell">
                     {client.current_month_budget > 0 ? formatCurrency(client.current_month_budget) : '—'}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 hidden lg:table-cell">
                     {client.website ? (
                       <a
                         href={client.website.startsWith('http') ? client.website : `https://${client.website}`}
@@ -200,8 +205,8 @@ export default function ClientsPage() {
                       </a>
                     ) : '—'}
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
+                  <td className="px-4 sm:px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-1 sm:gap-2">
                       <button
                         onClick={() => router.push(`/clients/${client.id}`)}
                         className="text-slate-600 hover:text-blue-600 text-xs font-medium px-2 py-1 rounded hover:bg-blue-50"
@@ -211,14 +216,14 @@ export default function ClientsPage() {
                       <button
                         onClick={() => handleArchive(client.id, client.name)}
                         disabled={archivingId === client.id}
-                        className="text-slate-400 hover:text-amber-600 text-xs font-medium px-2 py-1 rounded hover:bg-amber-50 disabled:opacity-50"
+                        className="text-slate-400 hover:text-amber-600 text-xs font-medium px-2 py-1 rounded hover:bg-amber-50 disabled:opacity-50 hidden sm:inline-flex"
                       >
                         Archive
                       </button>
                       <button
                         onClick={() => handleDelete(client.id, client.name)}
                         disabled={deletingId === client.id}
-                        className="text-slate-400 hover:text-red-600 text-xs font-medium px-2 py-1 rounded hover:bg-red-50 disabled:opacity-50"
+                        className="text-slate-400 hover:text-red-600 text-xs font-medium px-2 py-1 rounded hover:bg-red-50 disabled:opacity-50 hidden sm:inline-flex"
                       >
                         Delete
                       </button>
@@ -228,6 +233,7 @@ export default function ClientsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

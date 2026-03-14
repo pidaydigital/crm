@@ -126,7 +126,7 @@ function ClientInfoSection({ client, onUpdate }: { client: Client; onUpdate: (c:
           <input type="text" name="name" value={form.name} onChange={handleChange}
             className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">Industry</label>
             <input type="text" name="industry" value={form.industry} onChange={handleChange}
@@ -722,7 +722,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center justify-between">
         <Link href="/clients" className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1">

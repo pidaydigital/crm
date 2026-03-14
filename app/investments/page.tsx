@@ -124,9 +124,9 @@ export default function InvestmentsPage() {
   const fullYearCombinedTotal = Object.values(monthTotalLookup).reduce((s, v) => s + v, 0);
 
   return (
-    <div className="p-8 max-w-[1400px]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-[1400px]">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 sm:mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Investments</h2>
           <p className="text-slate-500 text-sm mt-1">Total spend across all clients and services</p>
@@ -268,28 +268,29 @@ export default function InvestmentsPage() {
                 <Link href="/clients" className="text-blue-600 hover:underline">Go to Clients</Link> to add budgets.
               </div>
             ) : (
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50">
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Status</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">
                       {formatMonthLabel(data.currentMonth)}
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      {year} Total To Date
+                    <th className="px-3 sm:px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                      {year} YTD
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      {year} Total (Planned)
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">
+                      {year} Planned
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">All Time (To Date)</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">All Time (Projected)</th>
+                    <th className="px-3 sm:px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">All Time</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Projected</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {activeClients.map(client => (
                     <tr key={client.id} className="hover:bg-slate-50">
-                      <td className="px-4 py-3">
+                      <td className="px-3 sm:px-4 py-3">
                         <Link
                           href={`/clients/${client.id}`}
                           className="font-medium text-slate-800 hover:text-blue-600 hover:underline"
@@ -297,7 +298,7 @@ export default function InvestmentsPage() {
                           {client.name}
                         </Link>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 hidden sm:table-cell">
                         <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
                           client.status === 'active' ? 'bg-green-100 text-green-800' :
                           client.status === 'prospect' ? 'bg-blue-100 text-blue-800' :
@@ -306,19 +307,19 @@ export default function InvestmentsPage() {
                           {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-slate-700 tabular-nums">
+                      <td className="px-4 py-3 text-right text-slate-700 tabular-nums hidden md:table-cell">
                         {client.this_month > 0 ? formatCurrency(client.this_month) : <span className="text-slate-300">—</span>}
                       </td>
-                      <td className="px-4 py-3 text-right font-semibold text-slate-700 tabular-nums">
+                      <td className="px-3 sm:px-4 py-3 text-right font-semibold text-slate-700 tabular-nums">
                         {client.this_year > 0 ? formatCurrency(client.this_year) : <span className="text-slate-300 font-normal">—</span>}
                       </td>
-                      <td className="px-4 py-3 text-right font-semibold text-slate-500 tabular-nums">
+                      <td className="px-4 py-3 text-right font-semibold text-slate-500 tabular-nums hidden lg:table-cell">
                         {clientFullYearTotal(client.id) > 0 ? formatCurrency(clientFullYearTotal(client.id)) : <span className="text-slate-300 font-normal">—</span>}
                       </td>
-                      <td className="px-4 py-3 text-right font-bold text-slate-900 tabular-nums">
+                      <td className="px-3 sm:px-4 py-3 text-right font-bold text-slate-900 tabular-nums">
                         {formatCurrency(client.all_time)}
                       </td>
-                      <td className="px-4 py-3 text-right font-semibold text-slate-500 tabular-nums">
+                      <td className="px-4 py-3 text-right font-semibold text-slate-500 tabular-nums hidden lg:table-cell">
                         {client.projected_all_time > 0 ? formatCurrency(client.projected_all_time) : <span className="text-slate-300 font-normal">—</span>}
                       </td>
                     </tr>
@@ -326,26 +327,27 @@ export default function InvestmentsPage() {
 
                   {/* Totals row */}
                   <tr className="bg-slate-50 border-t-2 border-slate-200 font-bold">
-                    <td className="px-4 py-3 text-slate-700">All Clients</td>
-                    <td className="px-4 py-3" />
-                    <td className="px-4 py-3 text-right text-slate-700 tabular-nums">
+                    <td className="px-3 sm:px-4 py-3 text-slate-700">All Clients</td>
+                    <td className="px-4 py-3 hidden sm:table-cell" />
+                    <td className="px-4 py-3 text-right text-slate-700 tabular-nums hidden md:table-cell">
                       {data.thisMonth > 0 ? formatCurrency(data.thisMonth) : <span className="text-slate-300 font-normal">—</span>}
                     </td>
-                    <td className="px-4 py-3 text-right text-slate-700 tabular-nums">
+                    <td className="px-3 sm:px-4 py-3 text-right text-slate-700 tabular-nums">
                       {data.thisYear > 0 ? formatCurrency(data.thisYear) : <span className="text-slate-300 font-normal">—</span>}
                     </td>
-                    <td className="px-4 py-3 text-right text-slate-600 tabular-nums">
+                    <td className="px-4 py-3 text-right text-slate-600 tabular-nums hidden lg:table-cell">
                       {data.projectedYear > 0 ? formatCurrency(data.projectedYear) : <span className="text-slate-300 font-normal">—</span>}
                     </td>
-                    <td className="px-4 py-3 text-right text-slate-900 tabular-nums">
+                    <td className="px-3 sm:px-4 py-3 text-right text-slate-900 tabular-nums">
                       {formatCurrency(data.allTime)}
                     </td>
-                    <td className="px-4 py-3 text-right text-slate-600 tabular-nums">
+                    <td className="px-4 py-3 text-right text-slate-600 tabular-nums hidden lg:table-cell">
                       {formatCurrency(data.projectedAllTime)}
                     </td>
                   </tr>
                 </tbody>
               </table>
+              </div>
             )}
           </div>
         </>

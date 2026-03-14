@@ -133,14 +133,14 @@ export default function UsersPage() {
 
   if (loading) {
     return (
-      <div className="p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         <div className="text-slate-400 text-sm">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-3xl">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Users</h1>
@@ -162,7 +162,7 @@ export default function UsersPage() {
             {addError && (
               <div className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">{addError}</div>
             )}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">Username</label>
                 <input
@@ -199,21 +199,22 @@ export default function UsersPage() {
 
       {/* Users table */}
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+        <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50">
-              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide px-5 py-3">Username</th>
-              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide px-5 py-3">Role</th>
-              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide px-5 py-3">Added</th>
-              <th className="px-5 py-3"></th>
+              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide px-4 sm:px-5 py-3">Username</th>
+              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide px-5 py-3 hidden sm:table-cell">Role</th>
+              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide px-5 py-3 hidden sm:table-cell">Added</th>
+              <th className="px-4 sm:px-5 py-3"></th>
             </tr>
           </thead>
           <tbody>
             {users.map((user, i) => (
               <tr key={user.id} className={i < users.length - 1 ? 'border-b border-slate-100' : ''}>
-                <td className="px-5 py-4">
+                <td className="px-4 sm:px-5 py-4">
                   {renamingId === user.id ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <input
                         type="text"
                         value={renameValue}
@@ -226,22 +227,25 @@ export default function UsersPage() {
                       <button onClick={() => { setRenamingId(null); setRenameError(''); }} className="text-slate-400 hover:text-slate-600 text-xs">Cancel</button>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-slate-800">{user.username}</span>
-                      {me?.userId === user.id && (
-                        <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-medium">you</span>
-                      )}
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-slate-800">{user.username}</span>
+                        {me?.userId === user.id && (
+                          <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-medium">you</span>
+                        )}
+                      </div>
+                      <div className="sm:hidden text-xs text-slate-400 mt-0.5 capitalize">{user.role}</div>
                     </div>
                   )}
                 </td>
-                <td className="px-5 py-4">
+                <td className="px-5 py-4 hidden sm:table-cell">
                   <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded font-medium capitalize">{user.role}</span>
                 </td>
-                <td className="px-5 py-4 text-sm text-slate-500">
+                <td className="px-5 py-4 text-sm text-slate-500 hidden sm:table-cell">
                   {new Date(user.created_at).toLocaleDateString()}
                 </td>
-                <td className="px-5 py-4">
-                  <div className="flex items-center gap-2 justify-end">
+                <td className="px-4 sm:px-5 py-4">
+                  <div className="flex items-center gap-2 justify-end flex-wrap">
                     <button
                       onClick={() => {
                         setRenamingId(user.id);
@@ -279,6 +283,7 @@ export default function UsersPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Change password inline panel */}
@@ -292,7 +297,7 @@ export default function UsersPage() {
             {pwError && (
               <div className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">{pwError}</div>
             )}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">New password</label>
                 <input

@@ -52,7 +52,7 @@ export default function ArchivedClientsPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <div className="flex items-center gap-3 mb-1">
@@ -76,28 +76,33 @@ export default function ArchivedClientsPage() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50">
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Industry</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Contacts</th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Industry</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Contacts</th>
+                <th className="px-4 sm:px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {clients.map((client) => (
                 <tr key={client.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4">
+                  <td className="px-4 sm:px-6 py-4">
                     <Link href={`/clients/${client.id}`} className="font-medium text-slate-800 hover:text-blue-600">
                       {client.name}
                     </Link>
+                    <div className="sm:hidden text-xs text-slate-400 mt-0.5">
+                      {client.industry && <span>{client.industry} · </span>}
+                      <span className="capitalize">{client.status}</span>
+                    </div>
                   </td>
-                  <td className="px-6 py-4 text-slate-500">{client.industry || '—'}</td>
-                  <td className="px-6 py-4 text-slate-500 capitalize">{client.status}</td>
-                  <td className="px-6 py-4 text-slate-600">{client.contact_count}</td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4 text-slate-500 hidden sm:table-cell">{client.industry || '—'}</td>
+                  <td className="px-6 py-4 text-slate-500 capitalize hidden sm:table-cell">{client.status}</td>
+                  <td className="px-6 py-4 text-slate-600 hidden sm:table-cell">{client.contact_count}</td>
+                  <td className="px-4 sm:px-6 py-4 text-right">
                     <button
                       onClick={() => handleUnarchive(client.id, client.name)}
                       disabled={unarchivingId === client.id}
@@ -110,6 +115,7 @@ export default function ArchivedClientsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

@@ -88,8 +88,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mb-6 sm:mb-8">
         <h2 className="text-2xl font-bold text-slate-800">Dashboard</h2>
         <p className="text-slate-500 text-sm mt-1">{formatMonth(data.currentMonth)}</p>
       </div>
@@ -190,25 +190,28 @@ export default function DashboardPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-slate-100">
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Role</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Added</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Role</th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Added</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {data.recentContacts.map((contact) => (
                     <tr key={contact.id} className="hover:bg-slate-50">
-                      <td className="px-6 py-3 font-medium text-slate-800">{contact.name}</td>
-                      <td className="px-6 py-3 text-slate-500">{contact.email || '—'}</td>
-                      <td className="px-6 py-3 text-slate-500">{contact.role || '—'}</td>
-                      <td className="px-6 py-3">
+                      <td className="px-4 sm:px-6 py-3">
+                        <span className="font-medium text-slate-800">{contact.name}</span>
+                        <div className="sm:hidden text-xs text-slate-400 mt-0.5">{contact.email || ''}</div>
+                      </td>
+                      <td className="px-6 py-3 text-slate-500 hidden sm:table-cell">{contact.email || '—'}</td>
+                      <td className="px-6 py-3 text-slate-500 hidden md:table-cell">{contact.role || '—'}</td>
+                      <td className="px-4 sm:px-6 py-3">
                         <Link href={`/clients/${contact.client_id}`} className="text-blue-600 hover:underline">
                           {contact.client_name}
                         </Link>
                       </td>
-                      <td className="px-6 py-3 text-slate-400">{formatDate(contact.created_at)}</td>
+                      <td className="px-6 py-3 text-slate-400 hidden md:table-cell">{formatDate(contact.created_at)}</td>
                     </tr>
                   ))}
                 </tbody>

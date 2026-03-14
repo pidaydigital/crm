@@ -229,9 +229,9 @@ export default function ExpensesPage() {
   const maxMonthlyTotal = Math.max(...Object.values(monthTotalLookup), 1);
 
   return (
-    <div className="p-8 max-w-[1200px]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px]">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 sm:mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Expenses</h2>
           <p className="text-slate-500 text-sm mt-1">Track and manage your business expenses</p>
@@ -355,27 +355,31 @@ export default function ExpensesPage() {
                 <button onClick={openAdd} className="text-blue-600 hover:underline">Add one.</button>
               </div>
             ) : (
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50">
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Date</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Description</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Category</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Amount</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Notes</th>
-                    <th className="px-4 py-3 w-20" />
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Date</th>
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Description</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Category</th>
+                    <th className="px-3 sm:px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Amount</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Notes</th>
+                    <th className="px-3 sm:px-4 py-3 w-20" />
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {displayedExpenses.map(expense => (
                     <tr key={expense.id} className="hover:bg-slate-50 group">
-                      <td className="px-4 py-3 text-slate-500 whitespace-nowrap tabular-nums">
+                      <td className="px-3 sm:px-4 py-3 text-slate-500 whitespace-nowrap tabular-nums">
                         {formatDate(expense.date)}
                       </td>
-                      <td className="px-4 py-3 font-medium text-slate-800">
-                        {expense.description}
+                      <td className="px-3 sm:px-4 py-3">
+                        <span className="font-medium text-slate-800">{expense.description}</span>
+                        <div className="md:hidden text-xs text-slate-400 mt-0.5">
+                          {expense.category && <span className="inline-flex px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">{expense.category}</span>}
+                        </div>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 hidden md:table-cell">
                         {expense.category ? (
                           <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
                             {expense.category}
@@ -384,14 +388,14 @@ export default function ExpensesPage() {
                           <span className="text-slate-300">—</span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-right font-semibold text-slate-800 tabular-nums whitespace-nowrap">
+                      <td className="px-3 sm:px-4 py-3 text-right font-semibold text-slate-800 tabular-nums whitespace-nowrap">
                         {formatCurrency(expense.amount)}
                       </td>
-                      <td className="px-4 py-3 text-slate-400 text-xs max-w-[200px] truncate">
+                      <td className="px-4 py-3 text-slate-400 text-xs max-w-[200px] truncate hidden lg:table-cell">
                         {expense.notes || <span className="text-slate-200">—</span>}
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity justify-end">
+                      <td className="px-3 sm:px-4 py-3">
+                        <div className="flex items-center gap-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity justify-end">
                           <button
                             onClick={() => openEdit(expense)}
                             className="text-xs text-slate-500 hover:text-slate-800 font-medium"
@@ -412,14 +416,17 @@ export default function ExpensesPage() {
                 {/* Totals row */}
                 <tfoot>
                   <tr className="border-t-2 border-slate-200 bg-slate-50">
-                    <td colSpan={3} className="px-4 py-3 font-semibold text-slate-700 text-sm">Total</td>
-                    <td className="px-4 py-3 text-right font-bold text-slate-900 tabular-nums whitespace-nowrap">
+                    <td colSpan={2} className="px-3 sm:px-4 py-3 font-semibold text-slate-700 text-sm">Total</td>
+                    <td className="hidden md:table-cell" />
+                    <td className="px-3 sm:px-4 py-3 text-right font-bold text-slate-900 tabular-nums whitespace-nowrap">
                       {formatCurrency(displayedExpenses.reduce((s, e) => s + e.amount, 0))}
                     </td>
-                    <td colSpan={2} />
+                    <td className="hidden lg:table-cell" />
+                    <td />
                   </tr>
                 </tfoot>
               </table>
+              </div>
             )}
           </div>
         </>
@@ -445,7 +452,7 @@ export default function ExpensesPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1">Amount <span className="text-red-400">*</span></label>
                 <div className="relative">
