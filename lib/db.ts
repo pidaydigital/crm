@@ -52,6 +52,14 @@ async function initializeSchema(db: LibsqlClient): Promise<void> {
       notes TEXT,
       created_at TEXT DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'owner',
+      created_at TEXT DEFAULT (datetime('now'))
+    );
   `);
 
   // Migration: add archived column if it doesn't exist
@@ -128,5 +136,13 @@ export interface Expense {
   amount: number;
   date: string;
   notes: string | null;
+  created_at: string;
+}
+
+export interface User {
+  id: number;
+  username: string;
+  password_hash: string;
+  role: string;
   created_at: string;
 }
