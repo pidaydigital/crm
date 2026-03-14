@@ -31,6 +31,11 @@ interface FinancialData {
   profit: number;
   investmentsByClient: { id: number; name: string; total: number }[];
   expensesByCategory: { category: string; total: number }[];
+  projectedInvestmentTotal: number | null;
+  projectedExpenseTotal: number | null;
+  projectedProfit: number | null;
+  projectedInvestmentsByClient: { id: number; name: string; total: number }[] | null;
+  projectedExpensesByCategory: { category: string; total: number }[] | null;
 }
 
 export default function FinancialsPage() {
@@ -92,13 +97,25 @@ export default function FinancialsPage() {
             <div className="rounded-xl border border-slate-200 bg-white p-6">
               <p className="text-xs font-semibold uppercase tracking-wider mb-1 text-slate-500">Revenue</p>
               <p className="text-3xl font-bold tabular-nums text-slate-900">{formatCurrency(data.investmentTotal)}</p>
-              <p className="text-xs mt-1.5 text-slate-400">Client investments</p>
+              {data.projectedInvestmentTotal !== null ? (
+                <p className="text-xs mt-1.5 text-slate-400">
+                  {formatCurrency(data.projectedInvestmentTotal)} incl. future months
+                </p>
+              ) : (
+                <p className="text-xs mt-1.5 text-slate-400">Client investments</p>
+              )}
             </div>
             {/* Expenses */}
             <div className="rounded-xl border border-slate-200 bg-white p-6">
               <p className="text-xs font-semibold uppercase tracking-wider mb-1 text-slate-500">Expenses</p>
               <p className="text-3xl font-bold tabular-nums text-red-600">{formatCurrency(data.expenseTotal)}</p>
-              <p className="text-xs mt-1.5 text-slate-400">Operating costs</p>
+              {data.projectedExpenseTotal !== null ? (
+                <p className="text-xs mt-1.5 text-slate-400">
+                  {formatCurrency(data.projectedExpenseTotal)} incl. future months
+                </p>
+              ) : (
+                <p className="text-xs mt-1.5 text-slate-400">Operating costs</p>
+              )}
             </div>
             {/* Profit */}
             <div className={`rounded-xl border p-6 ${data.profit >= 0 ? 'bg-slate-800 border-slate-700' : 'bg-red-900 border-red-800'}`}>
@@ -106,9 +123,14 @@ export default function FinancialsPage() {
               <p className={`text-3xl font-bold tabular-nums ${data.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                 {formatCurrency(data.profit)}
               </p>
-              {profitMargin !== null && (
+              {data.projectedProfit !== null ? (
+                <p className="text-xs mt-1.5 text-slate-400">
+                  {formatCurrency(data.projectedProfit)} incl. future months
+                  {profitMargin !== null && <span> &middot; {profitMargin}% margin</span>}
+                </p>
+              ) : profitMargin !== null ? (
                 <p className="text-xs mt-1.5 text-slate-400">{profitMargin}% margin</p>
-              )}
+              ) : null}
             </div>
           </div>
 

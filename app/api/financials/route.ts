@@ -82,14 +82,16 @@ export async function GET(request: NextRequest) {
     // For investments (budget_entries), convert date range to YYYY-MM range
     const monthFrom = dateFrom.slice(0, 7);
     const monthTo = dateTo.slice(0, 7);
+    const currentMonthStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+    // Cap at current month so we only show actuals (not future planned months)
+    const actualMonthTo = monthTo > currentMonthStr ? currentMonthStr : monthTo;
+    const currentMonthLastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const currentMonthEndDate = `${currentMonthStr}-${String(currentMonthLastDay).padStart(2, '0')}`;
+    const actualDateTo = dateTo > currentMonthEndDate ? currentMonthEndDate : dateTo;
+    const hasFutureData = monthTo > currentMonthStr;
 
-    const [
-      investmentTotalResult,
-      investmentByClientResult,
-      expenseTotalResult,
-      expenseByCategoryResult,
-    ] = await Promise.all([
-      // Total investments in range
+    const queries: Promise<any>[] = [
+      // Total investments (actuals only, through current month)
       db.execute({
         sql: `
           SELECT COALESCE(SUM(b.amount), 0) as total
@@ -97,9 +99,9 @@ export async function GET(request: NextRequest) {
           JOIN clients c ON c.id = b.client_id
           WHERE b.month >= ? AND b.month <= ? AND c.archived = 0
         `,
-        args: [monthFrom, monthTo],
+        args: [monthFrom, actualMonthTo],
       }),
-      // Investments by client
+      // Investments by client (actuals)
       db.execute({
         sql: `
           SELECT c.id, c.name, COALESCE(SUM(b.amount), 0) as total
@@ -110,18 +112,18 @@ export async function GET(request: NextRequest) {
           HAVING total > 0
           ORDER BY total DESC
         `,
-        args: [monthFrom, monthTo],
+        args: [monthFrom, actualMonthTo],
       }),
-      // Total expenses in range
+      // Total expenses (actuals only)
       db.execute({
         sql: `
           SELECT COALESCE(SUM(amount), 0) as total
           FROM expenses
           WHERE date >= ? AND date <= ?
         `,
-        args: [dateFrom, dateTo],
+        args: [dateFrom, actualDateTo],
       }),
-      // Expenses by category
+      // Expenses by category (actuals)
       db.execute({
         sql: `
           SELECT COALESCE(category, 'Uncategorized') as category, COALESCE(SUM(amount), 0) as total
@@ -131,12 +133,70 @@ export async function GET(request: NextRequest) {
           HAVING total > 0
           ORDER BY total DESC
         `,
-        args: [dateFrom, dateTo],
+        args: [dateFrom, actualDateTo],
       }),
-    ]);
+    ];
 
-    const investmentTotal = Number(toRow(investmentTotalResult)?.total ?? 0);
-    const expenseTotal = Number(toRow(expenseTotalResult)?.total ?? 0);
+    // If timeframe extends into the future, also fetch projected (full range) totals
+    if (hasFutureData) {
+      queries.push(
+        // Projected investment total (full range)
+        db.execute({
+          sql: `
+            SELECT COALESCE(SUM(b.amount), 0) as total
+            FROM budget_entries b
+            JOIN clients c ON c.id = b.client_id
+            WHERE b.month >= ? AND b.month <= ? AND c.archived = 0
+          `,
+          args: [monthFrom, monthTo],
+        }),
+        // Projected investments by client (full range)
+        db.execute({
+          sql: `
+            SELECT c.id, c.name, COALESCE(SUM(b.amount), 0) as total
+            FROM budget_entries b
+            JOIN clients c ON c.id = b.client_id
+            WHERE b.month >= ? AND b.month <= ? AND c.archived = 0
+            GROUP BY c.id
+            HAVING total > 0
+            ORDER BY total DESC
+          `,
+          args: [monthFrom, monthTo],
+        }),
+        // Projected expense total (full range)
+        db.execute({
+          sql: `
+            SELECT COALESCE(SUM(amount), 0) as total
+            FROM expenses
+            WHERE date >= ? AND date <= ?
+          `,
+          args: [dateFrom, dateTo],
+        }),
+        // Projected expenses by category (full range)
+        db.execute({
+          sql: `
+            SELECT COALESCE(category, 'Uncategorized') as category, COALESCE(SUM(amount), 0) as total
+            FROM expenses
+            WHERE date >= ? AND date <= ?
+            GROUP BY category
+            HAVING total > 0
+            ORDER BY total DESC
+          `,
+          args: [dateFrom, dateTo],
+        }),
+      );
+    }
+
+    const results = await Promise.all(queries);
+
+    const investmentTotal = Number(toRow(results[0])?.total ?? 0);
+    const expenseTotal = Number(toRow(results[2])?.total ?? 0);
+
+    const projectedInvestmentTotal = hasFutureData ? Number(toRow(results[4])?.total ?? 0) : null;
+    const projectedExpenseTotal = hasFutureData ? Number(toRow(results[6])?.total ?? 0) : null;
+    const projectedProfit = projectedInvestmentTotal !== null && projectedExpenseTotal !== null
+      ? projectedInvestmentTotal - projectedExpenseTotal
+      : null;
 
     return NextResponse.json({
       timeframe,
@@ -146,8 +206,13 @@ export async function GET(request: NextRequest) {
       investmentTotal,
       expenseTotal,
       profit: investmentTotal - expenseTotal,
-      investmentsByClient: toRows(investmentByClientResult),
-      expensesByCategory: toRows(expenseByCategoryResult),
+      investmentsByClient: toRows(results[1]),
+      expensesByCategory: toRows(results[3]),
+      projectedInvestmentTotal,
+      projectedExpenseTotal,
+      projectedProfit,
+      projectedInvestmentsByClient: hasFutureData ? toRows(results[5]) : null,
+      projectedExpensesByCategory: hasFutureData ? toRows(results[7]) : null,
     });
   } catch (error) {
     console.error('GET /api/financials error:', error);
